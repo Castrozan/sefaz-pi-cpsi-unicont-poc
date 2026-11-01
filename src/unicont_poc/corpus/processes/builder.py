@@ -3,12 +3,12 @@ from __future__ import annotations
 from random import Random
 from typing import Any
 
-from unicont_poc.corpus.accountability_process import build_accountability_process
-from unicont_poc.corpus.blueprint import ProcessBlueprint
+from unicont_poc.corpus.processes.accountability_process import build_accountability_process
+from unicont_poc.corpus.processes.blueprint import ProcessBlueprint
 from unicont_poc.corpus.catalog import checklist_for
-from unicont_poc.corpus.contracting_process import build_contracting_process
-from unicont_poc.corpus.identities import ORGANS, synthetic_process_number
-from unicont_poc.corpus.payment_process import build_payment_process
+from unicont_poc.corpus.processes.contracting_process import build_contracting_process
+from unicont_poc.corpus.processes.identities import ORGANS, synthetic_process_number
+from unicont_poc.corpus.processes.payment_process import build_payment_process
 from unicont_poc.domain import DocumentType, ProcessCategory
 
 MUTUALLY_EXCLUSIVE_IRREGULARITIES: tuple[frozenset[str], ...] = (

@@ -3,10 +3,10 @@ from __future__ import annotations
 from random import Random
 
 from unicont_poc.corpus.contract import DocumentDraft, DocumentPlan
-from unicont_poc.corpus.family_standard.accountability import ACCOUNTABILITY_RENDERERS
-from unicont_poc.corpus.family_standard.contracting import CONTRACTING_RENDERERS
-from unicont_poc.corpus.family_standard.payment import PAYMENT_RENDERERS
-from unicont_poc.corpus.family_standard.routine import ROUTINE_RENDERERS
+from unicont_poc.corpus.families.standard.accountability import ACCOUNTABILITY_RENDERERS
+from unicont_poc.corpus.families.standard.contracting import CONTRACTING_RENDERERS
+from unicont_poc.corpus.families.standard.payment import PAYMENT_RENDERERS
+from unicont_poc.corpus.families.standard.routine import ROUTINE_RENDERERS
 
 
 class StandardTemplateFamily:

@@ -3,9 +3,9 @@ from __future__ import annotations
 from datetime import date, timedelta
 from random import Random
 
-from unicont_poc.corpus.blueprint import PlanWriter, ProcessBlueprint, money, percentage_of, person_name
-from unicont_poc.corpus.identities import SUPPLIER_NAMES, synthetic_cnpj
-from unicont_poc.corpus.object_scenarios import OBJECT_SCENARIOS, ObjectScenario
+from unicont_poc.corpus.processes.blueprint import PlanWriter, ProcessBlueprint, money, percentage_of, person_name
+from unicont_poc.corpus.processes.identities import SUPPLIER_NAMES, synthetic_cnpj
+from unicont_poc.corpus.processes.object_scenarios import OBJECT_SCENARIOS, ObjectScenario
 from unicont_poc.domain import DocumentType
 
 PAPERWORK_BY_COMPLEXITY = {"baixa": 6, "media": 16, "alta": 34}

@@ -6,11 +6,11 @@ from decimal import Decimal
 from random import Random
 from typing import Any
 
-from unicont_poc.corpus.blueprint import PlanWriter, ProcessBlueprint, money, person_name
-from unicont_poc.corpus.identities import SUPPLIER_NAMES, synthetic_cnpj
-from unicont_poc.corpus.object_scenarios import OBJECT_SCENARIOS, ObjectScenario
-from unicont_poc.corpus.payment_certificates import add_certificates
-from unicont_poc.corpus.payment_commitments import CommitmentTerms, add_commitments
+from unicont_poc.corpus.processes.blueprint import PlanWriter, ProcessBlueprint, money, person_name
+from unicont_poc.corpus.processes.identities import SUPPLIER_NAMES, synthetic_cnpj
+from unicont_poc.corpus.processes.object_scenarios import OBJECT_SCENARIOS, ObjectScenario
+from unicont_poc.corpus.processes.payment_certificates import add_certificates
+from unicont_poc.corpus.processes.payment_commitments import CommitmentTerms, add_commitments
 from unicont_poc.domain import DocumentType
 
 PAPERWORK_BY_COMPLEXITY = {"baixa": 2, "media": 6, "alta": 14}

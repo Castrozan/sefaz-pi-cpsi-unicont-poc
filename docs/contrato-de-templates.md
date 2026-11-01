@@ -3,7 +3,7 @@
 Uma família de templates implementa `TemplateFamily` (`src/unicont_poc/corpus/contract.py`): recebe um `DocumentPlan` e
 devolve `DocumentDraft(title, paragraphs)`. `title` pode ser `None` para documentos sem cabeçalho.
 
-Os slots de cada `DocumentType` são os argumentos nomeados de `writer.add(...)` em `corpus/payment_process.py`,
+Os slots de cada `DocumentType` são os argumentos nomeados de `writer.add(...)` em `corpus/processes/payment_process.py`,
 `payment_commitments.py`, `payment_certificates.py`, `contracting_process.py`, `accountability_process.py` e
 `blueprint.py` (`add_routine_paperwork`). Todo documento recebe também `process_number`, `organ_name`, `organ_cnpj` e
 `sei_number`. Datas chegam como `date`, valores como `Decimal`.

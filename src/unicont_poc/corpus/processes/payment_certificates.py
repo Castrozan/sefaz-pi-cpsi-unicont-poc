@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import date, timedelta
 
-from unicont_poc.corpus.blueprint import PlanWriter
+from unicont_poc.corpus.processes.blueprint import PlanWriter
 from unicont_poc.domain import DocumentType
 
 CERTIFICATE_TYPES = (DocumentType.CERTIDAO_FEDERAL, DocumentType.CERTIDAO_FGTS, DocumentType.CERTIDAO_TRABALHISTA)

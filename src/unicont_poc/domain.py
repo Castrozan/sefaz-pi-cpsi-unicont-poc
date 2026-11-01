@@ -75,6 +75,7 @@ class CheckStatus(StrEnum):
     CONFORME = "conforme"
     NAO_CONFORME = "nao_conforme"
     NAO_VERIFICAVEL = "nao_verificavel"
+    PREJUDICADO = "prejudicado"
 
 
 class RiskLevel(StrEnum):
@@ -94,6 +95,10 @@ class PageText:
     page_number: int
     text: str
 
+    @property
+    def canonical_text(self) -> str:
+        return " ".join(self.text.split())
+
 
 @dataclass(frozen=True)
 class SourceDocument:
@@ -104,8 +109,8 @@ class SourceDocument:
     was_scanned: bool
 
     @property
-    def full_text(self) -> str:
-        return "\n".join(page.text for page in self.pages)
+    def canonical_text(self) -> str:
+        return " ".join(page.canonical_text for page in self.pages)
 
 
 @dataclass(frozen=True)
@@ -136,10 +141,29 @@ class CheckResult:
     evidence: tuple[Evidence, ...] = ()
 
 
+@dataclass(frozen=True)
+class ExtractedField:
+    value: object
+    evidence: Evidence
+    method: str = "regra"
+
+
 @dataclass
 class ClassifiedDocument:
     document: SourceDocument
     document_type: DocumentType
     confidence: float
     method: str
-    fields: dict[str, object] = field(default_factory=dict)
+    fields: dict[str, ExtractedField] = field(default_factory=dict)
+
+    @property
+    def label(self) -> str:
+        return DOCUMENT_TYPE_LABELS[self.document_type]
+
+    def value(self, field_name: str) -> object | None:
+        extracted = self.fields.get(field_name)
+        return extracted.value if extracted else None
+
+    def evidence_for(self, field_name: str) -> Evidence | None:
+        extracted = self.fields.get(field_name)
+        return extracted.evidence if extracted else None

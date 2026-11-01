@@ -8,10 +8,10 @@ from pathlib import Path
 from random import Random
 from typing import Any
 
-from unicont_poc.corpus.blueprint import ProcessBlueprint
-from unicont_poc.corpus.builder import build_blueprint
+from unicont_poc.corpus.processes.blueprint import ProcessBlueprint
+from unicont_poc.corpus.processes.builder import build_blueprint
 from unicont_poc.corpus.contract import DocumentPlan, TemplateFamily
-from unicont_poc.corpus.family_standard import StandardTemplateFamily
+from unicont_poc.corpus.families.standard import StandardTemplateFamily
 from unicont_poc.corpus.rendering import convert_to_scanned_pdf, render_text_pdf
 from unicont_poc.domain import ProcessCategory
 
@@ -34,7 +34,7 @@ class CorpusRequest:
 def template_family_named(name: str) -> TemplateFamily:
     if name == "padrao":
         return StandardTemplateFamily()
-    from unicont_poc.corpus.family_heldout import HeldOutTemplateFamily
+    from unicont_poc.corpus.families.heldout import HeldOutTemplateFamily
 
     return HeldOutTemplateFamily()
 

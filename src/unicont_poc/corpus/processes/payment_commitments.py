@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 from decimal import Decimal
 
-from unicont_poc.corpus.blueprint import PlanWriter, money
+from unicont_poc.corpus.processes.blueprint import PlanWriter, money
 from unicont_poc.domain import DocumentType
 
 

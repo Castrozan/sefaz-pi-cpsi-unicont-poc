@@ -7,7 +7,7 @@ from random import Random
 from typing import Any
 
 from unicont_poc.corpus.contract import DocumentPlan
-from unicont_poc.corpus.identities import Organ, PERSON_FIRST_NAMES, PERSON_LAST_NAMES, synthetic_cnpj
+from unicont_poc.corpus.processes.identities import Organ, PERSON_FIRST_NAMES, PERSON_LAST_NAMES, synthetic_cnpj
 from unicont_poc.domain import DocumentType, ProcessCategory
 
 
