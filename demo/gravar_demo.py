@@ -55,9 +55,7 @@ def record(process_number: str, clean_process_number: str, output_directory: Pat
             "Os 56 Núcleos de Controle Interno analisaram 6.735 processos em abril de 2026, a 163,5 minutos cada.",
             8,
         )
-        narrate(
-            page, "Esta prova de conceito usa só dados sintéticos: nenhum processo, órgão, pessoa ou empresa é real.", 7
-        )
+        narrate(page, "Esta prova de conceito usa só dados sintéticos, criados para a demonstração.", 7)
         narrate(page, "A fila chega ordenada por risco e valor, para o analista começar pelo que mais importa.", 8)
         scroll_to(page, ".alertas")
         narrate(page, "O sistema aponta a mesma nota fiscal em processos diferentes, antes de pagar duas vezes.", 7)
@@ -107,7 +105,7 @@ def record(process_number: str, clean_process_number: str, output_directory: Pat
 
         page.goto(f"{BASE_URL}/auditoria?numero={process_number}")
         narrate(page, "Toda análise gera um registro auditável: documentos, critérios, resultado, modelo e versão.", 8)
-        narrate(page, "A cadeia de hashes revela qualquer alteração posterior do registro.", 6)
+        narrate(page, "A cadeia de hashes revela a alteração de entradas já registradas.", 6)
 
         page.goto(f"{BASE_URL}/busca")
         page.fill("input[name=texto]", "ressalva")

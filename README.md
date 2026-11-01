@@ -2,7 +2,7 @@
 
 Prova de conceito para o Desafio 01 (UNICONT) do CPSI 001/2026 da SEFAZ-PI. O sistema analisa processos, verifica critérios com evidência citada do documento e redige um parecer preliminar. Quem decide é o analista.
 
-Usa somente dados sintéticos, conforme o item 35 do edital. Nenhum processo, órgão, pessoa ou empresa é real, e nenhum sistema da SEFAZ-PI foi acessado.
+Usa somente dados sintéticos, conforme o item 35 do edital: nomes e números foram inventados, e coincidência com nome ou CNPJ real é acidental. Nenhum sistema da SEFAZ-PI foi acessado.
 
 ## Executar
 
@@ -12,11 +12,11 @@ Requer Nix com flakes. Na raiz do repositório:
 nix run
 ```
 
-Abra <http://127.0.0.1:8000>. A demonstração funciona sem rede e sem chave de API: ela restaura o estado da análise já concluída, com as respostas do modelo em cache.
+Abra <http://127.0.0.1:8000>. A demonstração funciona sem rede e sem chave de API: ela restaura o estado da análise já concluída, com as respostas do modelo em cache. O texto dos documentos já vem incluído; o link para o PDF original só funciona depois de baixar o corpus, como descrito em [Reproduzir a avaliação](#reproduzir-a-avaliação).
 
 ## Resultado
 
-Medido em 500 processos sintéticos, na primeira execução após congelar a lógica de análise.
+Medido em 500 processos sintéticos, na primeira execução após congelar a lógica de decisão.
 
 | # | Medida | Parâmetro do edital | Medido |
 |---|---|---|---|

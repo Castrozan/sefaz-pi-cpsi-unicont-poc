@@ -12,7 +12,7 @@ O Termo de Referência registra que nenhuma das soluções mapeadas atende à SE
 
 Primeira: um pipeline híbrido, em que regras auditáveis tratam o que é objetivo e um modelo de linguagem trata o que exige leitura, como a compatibilidade entre objeto e despesa ou a ressalva em um atesto.
 
-Segunda: rastreabilidade por construção. Toda conclusão do modelo precisa citar um trecho literal do documento, e o sistema confere essa citação por código. Citação que não confere descarta a conclusão. Cada análise gera um registro encadeado por hashes, com documentos, critérios, resultado, modelo e versão.
+Segunda: rastreabilidade por construção. Toda conclusão do modelo precisa citar um trecho literal do documento, e o sistema confere essa citação por código. Citação que não confere descarta a conclusão. Cada análise gera um registro encadeado por hashes, com documentos, critérios, resultado, modelo e versão, o que revela alteração de entradas registradas.
 
 Terceira: decisão humana por construção. O sistema redige; o analista decide. O envio ao SINCIN+ é recusado para análise sem aprovação humana registrada.
 
@@ -52,7 +52,7 @@ A solução isola SEI e SINCIN+ atrás de duas interfaces: uma recebe processos 
 
 ## Justificativa técnica do TRL declarado
 
-O TRL 4 corresponde a componentes integrados e verificados em laboratório. A evidência é um protótipo funcional que percorre todo o fluxo, com relatório de avaliação reproduzível sobre dados sintéticos.
+O TRL 4 corresponde a componentes integrados e verificados em laboratório. A evidência é um protótipo funcional que percorre todo o fluxo, com relatório de avaliação reproduzível sobre dados sintéticos. O número declarado vale para o núcleo da solução, MC-01 a MC-04, prioridade do Termo de Referência; MC-05 e MC-06 estão em TRL 3, como mostra a tabela. Mesmo no núcleo há fragilidade conhecida: prestação de contas ficou em 72,0%, abaixo da barra de 80%.
 
 O TRL 5 não é declarado porque exige validação em ambiente relevante, e aqui faltam três coisas: dados do SEI, mesmo anonimizados; integração com SEI e SINCIN+; e critérios oficiais da UNICONT. Os adaptadores são simulados, e o modelo de linguagem foi executado em lote, não por API em serviço contínuo.
 
@@ -60,7 +60,7 @@ O TRL 5 não é declarado porque exige validação em ambiente relevante, e aqui
 |---|---|---|---|---|
 | 1 | MC-01 Busca | Índice sobre 8.844 documentos; mediana de 0,26 ms | 4 | Volume e leiautes reais do SEI |
 | 2 | MC-02 Classificação | 99,8% de acerto de tipo em dados sintéticos; depende do modelo em texto inédito | 4 | Tipologias reais e amostra do SEI |
-| 3 | MC-03 Resumo e risco | Resumo em 497 de 500 processos; não houve avaliação da qualidade por analistas | 4 | Validação por analistas |
+| 3 | MC-03 Resumo e risco | Resumo em 500 de 500 processos; não houve avaliação da qualidade por analistas | 4 | Validação por analistas |
 | 4 | MC-04 Conformidade | 94,0% de acerto por processo em dados sintéticos; prestação de contas em 72,0% | 4 | Checklist oficial e gabarito da UNICONT |
 | 5 | MC-05 Orquestração | Fila por risco e alerta de duplicidade | 3 | Fluxos reais entre núcleos |
 | 6 | MC-06 Painel | Indicadores por núcleo e inconsistência | 3 | Indicadores definidos com a gestão |
@@ -81,7 +81,7 @@ A solução é um protótipo desenvolvido para este desafio, sem uso comercial n
 
 **Escala.** Foram medidos 500 processos e 8.844 documentos em um ciclo, com dados sintéticos. A etapa sem modelo levou 194 s, com 6 processos paralelos em um computador pessoal, ou 0,39 s por processo.
 
-**Tempestividade.** O tempo de máquina estimado é de 0,19 minuto por processo, somando leitura e 9,7 s de modelo por pedido, medidos em lote. A linha de base é de 163,5 minutos de análise humana. Os dois números não são comparáveis diretamente: o analista ainda precisa revisar e decidir, e a redução real do tempo de análise será medida no piloto contra a meta de 50%.
+**Tempestividade.** O tempo de máquina estimado é de 0,19 minuto por processo, somando a mediana de 1,96 s de leitura em série e 9,7 s de modelo por pedido, medidos em lote. A linha de base é de 163,5 minutos de análise humana. Os dois números não são comparáveis diretamente: o analista ainda precisa revisar e decidir, e a redução real do tempo de análise será medida no piloto contra a meta de 50%.
 
 **Escalabilidade.** Os 80.820 processos por ano projetados equivalem a cerca de 306 por dia útil, considerando 22 dias úteis por mês e 12 meses. A leitura em lote é paralelizável. O limite prático está na vazão do modelo de linguagem e nos custos, que ainda não foram medidos em serviço contínuo. A meta de 2.000 processos por mês na Fase 2 está dentro da vazão medida, com a mesma ressalva. A escala para os 56 núcleos depende da capacidade e das regras de acesso do ambiente da SEFAZ-PI.
 

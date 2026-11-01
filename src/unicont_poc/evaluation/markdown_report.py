@@ -139,7 +139,7 @@ def render_report(model_report: dict, rules_report: dict, context: dict) -> str:
         "## 7. Tempo\n\n"
         + f"- Leitura, OCR, classificação e regras: {_decimal(time_section['parede_por_processo_segundos'])} s de parede por processo, com {context['workers']} processos paralelos, no ciclo de {_decimal(time_section['parede_do_ciclo_segundos'])} s (replay do modelo).\n"
         + f"- Modelo de linguagem: {str(round(context['language_seconds_per_request'], 1)).replace('.', ',')} s por pedido, medidos no lote sequencial por subagente. É aproximação, não latência de API.\n"
-        + f"- Total estimado: {minutes}, contra a linha de base de 163,5 min de análise humana.\n"
+        + f"- Total estimado: {minutes}, somando a mediana de {_decimal(time_section['mediana_por_processo_segundos'])} s de um processo lido em série e o tempo do modelo. A linha de base é de 163,5 min de análise humana.\n"
         + "- A comparação não mede redução do tempo do analista. Isso exige estudo com analistas, previsto para a Fase 2.\n"
         + f"- Busca: mediana de {_decimal(model_report['busca']['mediana_ms'])} ms e máximo de {_decimal(model_report['busca']['maximo_ms'])} ms em {model_report['busca']['consultas']} consultas sobre o ciclo.",
         context["limitations"],

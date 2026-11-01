@@ -26,6 +26,8 @@ class AnalystReview:
             raise ReviewRejected("Processo já decidido.")
         if not analyst_name.strip():
             raise ReviewRejected("A decisão exige a identificação do analista.")
+        if approve and not final_opinion.strip():
+            raise ReviewRejected("A aprovação exige o texto do parecer.")
         if not approve and not note.strip():
             raise ReviewRejected("A devolução exige justificativa.")
         decided_at = datetime.now(timezone.utc).isoformat()

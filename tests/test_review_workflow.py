@@ -82,3 +82,15 @@ def test_search_index_ignores_accents_and_filters_by_field(tmp_path):
     assert len(store.search_index.search(SearchCriteria(text="manutencao"))) == 1
     assert len(store.search_index.search(SearchCriteria(cnpj="11.222.333/0001-81", minimum_amount=1000))) == 1
     assert store.search_index.search(SearchCriteria(document_type="parecer_juridico")) == []
+
+
+def test_approval_requires_opinion_text(store):
+    review = AnalystReview(store, SincinOutboxStub(store))
+    with pytest.raises(ReviewRejected):
+        review.decide(NUMBER, "Analista Teste", True, "   ")
+    assert store.connection.execute("SELECT count(*) FROM sincin_outbox").fetchone()[0] == 0
+
+
+def test_rewriting_who_an_entry_belongs_to_breaks_the_chain(store):
+    store.connection.execute("UPDATE audit_ledger SET process_number = 'outro' WHERE sequence = 1")
+    assert store.ledger.verify_chain() == (False, 1)

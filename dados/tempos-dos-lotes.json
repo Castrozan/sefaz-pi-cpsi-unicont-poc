@@ -1,0 +1,72 @@
+[
+ {
+  "lote": 1,
+  "duracao_ms": 370217,
+  "pedidos": 38
+ },
+ {
+  "lote": 2,
+  "duracao_ms": 394203,
+  "pedidos": 38
+ },
+ {
+  "lote": 3,
+  "duracao_ms": 295841,
+  "pedidos": 38
+ },
+ {
+  "lote": 4,
+  "duracao_ms": 459298,
+  "pedidos": 38
+ },
+ {
+  "lote": 5,
+  "duracao_ms": 335544,
+  "pedidos": 38
+ },
+ {
+  "lote": 6,
+  "duracao_ms": 312963,
+  "pedidos": 38
+ },
+ {
+  "lote": 7,
+  "duracao_ms": 331542,
+  "pedidos": 38
+ },
+ {
+  "lote": 8,
+  "duracao_ms": 369424,
+  "pedidos": 38
+ },
+ {
+  "lote": 9,
+  "duracao_ms": 360307,
+  "pedidos": 38
+ },
+ {
+  "lote": 10,
+  "duracao_ms": 331638,
+  "pedidos": 38
+ },
+ {
+  "lote": 11,
+  "duracao_ms": 434383,
+  "pedidos": 38
+ },
+ {
+  "lote": 12,
+  "duracao_ms": 411746,
+  "pedidos": 38
+ },
+ {
+  "lote": 13,
+  "duracao_ms": 373011,
+  "pedidos": 38
+ },
+ {
+  "lote": 14,
+  "duracao_ms": 55167,
+  "pedidos": 6
+ }
+]

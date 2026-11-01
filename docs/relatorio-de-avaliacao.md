@@ -2,7 +2,7 @@
 
 Medição em dados **sintéticos**, com gabarito gerado junto do corpus. Estes números não representam o desempenho em processos reais do SEI e não devem ser citados como tal.
 
-Ciclo de 500 processos e 8.844 documentos: 300 de pagamento, 100 de contratação e 100 de prestação de contas, com 11,3% dos documentos como imagem lida por OCR real e 46,6% dos processos com ao menos uma irregularidade semeada. Os números abaixo são os da primeira e única execução: a lógica de análise foi congelada antes de gerar o corpus e nada foi ajustado depois de ver o resultado.
+Ciclo de 500 processos e 8.844 documentos: 300 de pagamento, 100 de contratação e 100 de prestação de contas, com 11,3% dos documentos como imagem lida por OCR real e 46,6% dos processos com ao menos uma irregularidade semeada. Os números abaixo são os da primeira execução: a lógica de decisão foi congelada no commit `97febfe`, antes de gerar o corpus, e a medição rodou no `0f25ab1`, que só muda o recorte das citações exibidas. Depois de ver o resultado, nenhuma regra, prompt ou limiar foi ajustado.
 
 **Taxa de acerto** é a decisão certa por processo. Um processo conta como sinalizado se tiver critério não conforme ou item de conferência humana, então dúvida em processo regular conta como erro. **Conjunto exato** compara os critérios não conformes com os do gabarito. A linha de base "sempre conforme" acerta 53,4%; a comparação honesta é contra ela, não contra zero.
 
@@ -133,7 +133,7 @@ Classificação global: 99,8%.
 
 - Leitura, OCR, classificação e regras: 0,388 s de parede por processo, com 6 processos paralelos, no ciclo de 194,0 s (replay do modelo).
 - Modelo de linguagem: 9,7 s por pedido, medidos no lote sequencial por subagente. É aproximação, não latência de API.
-- Total estimado: 0,19 min por processo, contra a linha de base de 163,5 min de análise humana.
+- Total estimado: 0,19 min por processo, somando a mediana de 1,96 s de um processo lido em série e o tempo do modelo. A linha de base é de 163,5 min de análise humana.
 - A comparação não mede redução do tempo do analista. Isso exige estudo com analistas, previsto para a Fase 2.
 - Busca: mediana de 0,26 ms e máximo de 1,57 ms em 80 consultas sobre o ciclo.
 
@@ -157,7 +157,8 @@ A falha 4 é a mais grave: é o único caso em que um processo irregular saiu se
 - **Dados.** Sintéticos, com irregularidades plantadas e taxa de 46,6% arbitrada. A taxa real é desconhecida.
 - **Critérios.** Ilustrativos, derivados de normas públicas. O checklist oficial é da UNICONT e pode mudar o resultado.
 - **Modelo.** `claude-sonnet-5-5`, em 14 lotes sequenciais de subagentes do Claude Code, por falta de chave de API no ambiente. Os pedidos de um lote compartilham contexto, o que não ocorre em chamadas de API independentes. O adaptador de API está implementado e testado contra cliente simulado, sem nenhuma chamada real.
-- **Integridade.** O gabarito ficou lacrado fora do repositório enquanto o modelo respondia. Nenhuma citação foi rejeitada pela verificação literal, e os subagentes conferiram as próprias citações antes de entregar.
+- **Integridade.** O gabarito ficou lacrado fora do repositório enquanto o modelo respondia. Nenhuma citação foi rejeitada pela verificação literal, e os subagentes conferiram as próprias citações antes de entregar. A verificação prova que o trecho existe no documento, não que ele sustenta a conclusão: quem julga isso é o analista.
+- **Auditoria.** A cadeia de hashes revela alteração de entradas registradas, mas não a remoção das últimas entradas. Isso exige publicar o hash final em local externo. O nome do analista é texto livre: a PoC não tem autenticação.
 - **Autoria.** O gerador, os critérios e as regras têm a mesma origem. Só a família inédita foi escrita de forma independente, e ela segue o mesmo catálogo de irregularidades.
-- **Tempo.** A linha de base de 163,5 minutos é tempo humano disponível por processo. O tempo de máquina não prova redução do trabalho do analista.
+- **Tempo.** A linha de base de 163,5 minutos é tempo humano disponível por processo. O tempo de máquina não prova redução do trabalho do analista. As durações dos lotes estão em `dados/tempos-dos-lotes.json`.
 - **Integração.** SEI e SINCIN+ são simulados. Nenhum sistema real foi acessado.

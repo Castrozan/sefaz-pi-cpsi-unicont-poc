@@ -131,7 +131,12 @@ def command_serve(arguments: argparse.Namespace) -> None:
 
 
 def command_report(arguments: argparse.Namespace) -> None:
-    write_report(DEMO_REPORT, DATA_ROOT / "avaliacao-regras.json", Path("docs/relatorio-de-avaliacao.md"))
+    write_report(
+        DEMO_REPORT,
+        DATA_ROOT / "avaliacao-regras.json",
+        DATA_ROOT / "tempos-dos-lotes.json",
+        Path("docs/relatorio-de-avaliacao.md"),
+    )
 
 
 def demo() -> None:
