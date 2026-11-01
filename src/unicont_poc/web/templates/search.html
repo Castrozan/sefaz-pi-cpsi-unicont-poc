@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Busca{% endblock %}
+{% block content %}
+<h1>Busca por tipo, campo ou palavra-chave</h1>
+<form class="filtros busca" method="get">
+  <label>Palavra-chave <input name="texto" value="{{ form.texto }}" placeholder="ressalva, limpeza…"></label>
+  <label>Tipo <select name="tipo"><option value="">Todos</option>{% for value, label in types %}<option value="{{ value }}" {% if form.tipo == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+  <label>CNPJ <input name="cnpj" value="{{ form.cnpj }}"></label>
+  <label>Nº do processo <input name="processo" value="{{ form.processo }}"></label>
+  <label>Valor mínimo <input name="minimo" value="{{ form.minimo }}"></label>
+  <label>Valor máximo <input name="maximo" value="{{ form.maximo }}"></label>
+  <button>Buscar</button>
+</form>
+{% if has_query %}
+<p class="contagem">{{ results | length }} resultado(s) exibido(s) em {{ elapsed }} ms</p>
+<table>
+  <thead><tr><th>Processo</th><th>Documento</th><th>Tipo</th><th>Valor</th><th>CNPJ</th><th>Trecho</th></tr></thead>
+  <tbody>
+  {% for result in results %}
+    <tr>
+      <td><a href="/processo?numero={{ result.process_number | urlencode }}">{{ result.process_number }}</a></td>
+      <td><a href="/documento/{{ result.document_id }}">{{ result.document_id[-3:] }}</a></td>
+      <td>{{ result.label }}</td>
+      <td>{{ result.amount | money }}</td>
+      <td>{{ result.cnpj or '—' }}</td>
+      <td><small>{{ result.snippet | snippet }}</small></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}

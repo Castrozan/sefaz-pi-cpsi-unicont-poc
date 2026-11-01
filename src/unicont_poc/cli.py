@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
+import os
+import shutil
 from pathlib import Path
 
 from unicont_poc.adapters.language_models import PromptCollector, ReplayLanguageModel, request_key
@@ -16,6 +19,10 @@ from unicont_poc.persistence.store import AnalysisStore
 
 CORPUS_ROOT = Path("var/corpus")
 STATE_ROOT = Path("var/estado")
+DATA_ROOT = Path(os.environ.get("UNICONT_DADOS", "dados"))
+DEMO_SNAPSHOT = DATA_ROOT / "estado-demo.sqlite.gz"
+DEMO_REPORT = DATA_ROOT / "avaliacao.json"
+DEMO_DATABASE = STATE_ROOT / "demo.sqlite"
 CORPUS_PRESETS = {
     "desenvolvimento": CorpusRequest(
         "desenvolvimento",
@@ -108,6 +115,28 @@ def command_import_replies(arguments: argparse.Namespace) -> None:
     print(f"importados {imported}; ignorados {malformed}; total {len(known)}")
 
 
+def _serve(database: Path, corpus_directory: Path, report: Path, port: int) -> None:
+    import uvicorn
+
+    from unicont_poc.web.application import create_application
+
+    application = create_application(AnalysisStore(database), corpus_directory, report)
+    print(f"Assistente disponível em http://127.0.0.1:{port}")
+    uvicorn.run(application, host="127.0.0.1", port=port, log_level="warning")
+
+
+def command_serve(arguments: argparse.Namespace) -> None:
+    _serve(Path(arguments.banco), CORPUS_ROOT / "avaliacao", DEMO_REPORT, arguments.porta)
+
+
+def demo() -> None:
+    if not DEMO_DATABASE.exists():
+        DEMO_DATABASE.parent.mkdir(parents=True, exist_ok=True)
+        with gzip.open(DEMO_SNAPSHOT, "rb") as snapshot, DEMO_DATABASE.open("wb") as database:
+            shutil.copyfileobj(snapshot, database)
+    _serve(DEMO_DATABASE, CORPUS_ROOT / "avaliacao", DEMO_REPORT, 8000)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="unicont-poc")
     commands = parser.add_subparsers(required=True)
@@ -132,6 +161,10 @@ def main() -> None:
     importing.add_argument("--modelo", required=True)
     importing.add_argument("--respostas", dest="replies", default="dados/respostas-do-modelo.jsonl")
     importing.set_defaults(handler=command_import_replies)
+    serving = commands.add_parser("servir")
+    serving.add_argument("--banco", default=str(DEMO_DATABASE))
+    serving.add_argument("--porta", type=int, default=8000)
+    serving.set_defaults(handler=command_serve)
     arguments = parser.parse_args()
     arguments.handler(arguments)
 

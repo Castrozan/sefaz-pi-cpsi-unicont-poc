@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Registro auditável{% endblock %}
+{% block content %}
+<h1>Registro auditável</h1>
+<p class="meta">Processo <a href="/processo?numero={{ process_number | urlencode }}">{{ process_number }}</a>. Cadeia de hashes {{ 'íntegra' if is_intact else 'VIOLADA' }}, {{ entry_count }} entradas verificadas.</p>
+{% for entry in entries %}
+<article class="pagina">
+  <h2>#{{ entry.sequence }} {{ 'Análise concluída' if entry.event_type == 'analise_concluida' else 'Decisão do analista' }}</h2>
+  {% if entry.event_type == 'analise_concluida' %}
+  <dl>
+    <dt>Identificador</dt><dd>{{ entry.payload.analysis_id }}</dd>
+    <dt>Modelo</dt><dd>{{ entry.payload.model.identifier }} · {{ entry.payload.model.execution_mode }}</dd>
+    <dt>Versão do sistema</dt><dd>{{ entry.payload.model.pipeline_version }}</dd>
+    <dt>Critérios aplicados</dt><dd>{{ entry.payload.criteria.version }}: {{ entry.payload.criteria.applied | join(', ') }}</dd>
+    <dt>Resultado</dt><dd>{{ verdict_labels[entry.payload.verdict] }}, risco {{ risk_labels[entry.payload.risk.level] | lower }}</dd>
+    <dt>Documentos analisados</dt><dd>{{ entry.payload.documents | length }}, com SHA-256 registrado</dd>
+    <dt>Hash da entrada</dt><dd><code>{{ entry.entry_hash }}</code></dd>
+  </dl>
+  <details><summary>Documentos e hashes</summary><ul class="hashes">{% for document in entry.payload.documents %}<li>{{ document.document_id }} {{ document.label }} <code>{{ document.sha256 }}</code></li>{% endfor %}</ul></details>
+  {% else %}
+  <dl>
+    <dt>Analista</dt><dd>{{ entry.payload.analyst_name }}</dd>
+    <dt>Decisão</dt><dd>{{ review_labels[entry.payload.decision] }}</dd>
+    <dt>Parecer editado</dt><dd>{{ 'Sim' if entry.payload.edited_opinion else 'Não' }}</dd>
+    <dt>Hash da entrada</dt><dd><code>{{ entry.entry_hash }}</code></dd>
+  </dl>
+  {% endif %}
+</article>
+{% endfor %}
+{% endblock %}

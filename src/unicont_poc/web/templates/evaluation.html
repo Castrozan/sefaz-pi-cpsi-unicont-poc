@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Avaliação{% endblock %}
+{% block content %}
+<h1>Avaliação contra os critérios do edital</h1>
+{% if not report %}<p>Relatório ainda não gerado.</p>{% else %}
+<p class="nota">Números medidos em dados sintéticos, com gabarito gerado junto do corpus. Não representam desempenho em processos reais do SEI. Tempo de máquina não equivale a tempo de análise humana.</p>
+<div class="numeros">
+  <div><strong>{{ report.global.processos }}</strong><span>processos no ciclo (mínimo 500)</span></div>
+  <div><strong>{{ report.global.taxa_de_acerto_processo | percent }}</strong><span>taxa de acerto por processo (mínimo 80%)</span></div>
+  <div><strong>{{ report.global.acerto_exato_do_conjunto | percent }}</strong><span>conjunto exato de irregularidades</span></div>
+  <div><strong>{{ report.global.linha_de_base_sempre_conforme | percent }}</strong><span>linha de base: “sempre conforme”</span></div>
+</div>
+<section>
+  <h2>Por categoria e família de texto</h2>
+  <table>
+    <thead><tr><th>Grupo</th><th class="num">Processos</th><th class="num">Acerto</th><th class="num">Exato</th><th class="num">Detecção</th><th class="num">Falso alarme</th></tr></thead>
+    <tbody>
+    {% for group in [report.por_categoria, report.por_familia_de_template] %}{% for name, summary in group.items() %}
+      <tr><td>{{ name }}</td><td class="num">{{ summary.processos }}</td><td class="num">{{ summary.taxa_de_acerto_processo | percent }}</td><td class="num">{{ summary.acerto_exato_do_conjunto | percent }}</td><td class="num">{{ summary.deteccao_em_irregulares | percent }}</td><td class="num">{{ summary.falso_alarme_em_regulares | percent }}</td></tr>
+    {% endfor %}{% endfor %}
+    </tbody>
+  </table>
+</section>
+<section>
+  <h2>Por critério, incluindo as falhas</h2>
+  <table>
+    <thead><tr><th>Critério</th><th class="num">Semeados</th><th class="num">Falsos positivos</th><th class="num">Falsos negativos</th><th class="num">Conferência humana</th><th class="num">Precisão</th><th class="num">Revocação</th></tr></thead>
+    <tbody>{% for row in report.por_criterio %}<tr><td><b>{{ row.codigo }}</b> {{ row.criterio }}</td><td class="num">{{ row.casos_semeados }}</td><td class="num">{{ row.falsos_positivos }}</td><td class="num">{{ row.falsos_negativos }}</td><td class="num">{{ row.nao_verificaveis }}</td><td class="num">{{ row.precisao | percent }}</td><td class="num">{{ row.revocacao | percent }}</td></tr>{% endfor %}</tbody>
+  </table>
+</section>
+{% endif %}
+{% endblock %}

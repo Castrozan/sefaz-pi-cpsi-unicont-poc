@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Fila de análise{% endblock %}
+{% block content %}
+<h1>Fila de análise priorizada por risco</h1>
+<div class="numeros">
+  <div><strong>{{ dashboard.total }}</strong><span>processos no ciclo</span></div>
+  <div class="alto"><strong>{{ dashboard.risk_counts.get('alto', 0) }}</strong><span>risco alto</span></div>
+  <div class="medio"><strong>{{ dashboard.risk_counts.get('medio', 0) }}</strong><span>risco médio</span></div>
+  <div class="baixo"><strong>{{ dashboard.risk_counts.get('baixo', 0) }}</strong><span>risco baixo</span></div>
+  <div><strong>{{ dashboard.review_counts.get('aguardando_analista', 0) }}</strong><span>aguardando analista</span></div>
+</div>
+{% if alerts %}
+<section class="alertas">
+  <h2>Possíveis duplicidades entre processos</h2>
+  <ul>{% for alert in alerts %}<li><a href="/processo?numero={{ alert.process_number | urlencode }}">{{ alert.process_number }}</a> {{ alert.rationale }}</li>{% endfor %}</ul>
+</section>
+{% endif %}
+<form class="filtros" method="get">
+  <label>Núcleo <select name="nucleo"><option value="">Todos</option>{% for nucleus in nuclei %}<option {% if filters.nucleo == nucleus %}selected{% endif %}>{{ nucleus }}</option>{% endfor %}</select></label>
+  <label>Risco <select name="risco"><option value="">Todos</option>{% for key, label in risk_labels.items() %}<option value="{{ key }}" {% if filters.risco == key %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+  <label>Situação <select name="situacao"><option value="">Todas</option>{% for key, label in review_labels.items() %}<option value="{{ key }}" {% if filters.situacao == key %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+  <button>Filtrar</button>
+  <span class="contagem">{{ row_count }} processo(s)</span>
+</form>
+<table>
+  <thead><tr><th>Processo</th><th>Categoria</th><th>Núcleo</th><th>Risco</th><th>Resultado preliminar</th><th>Situação</th><th class="num">Prioridade</th></tr></thead>
+  <tbody>
+  {% for row in rows %}
+    <tr>
+      <td><a href="/processo?numero={{ row.process_number | urlencode }}">{{ row.process_number }}</a></td>
+      <td>{{ row.category | category }}</td>
+      <td>{{ row.nucleus_code }}</td>
+      <td><span class="risco {{ row.risk_level }}">{{ risk_labels[row.risk_level] }}</span></td>
+      <td>{{ verdict_labels[row.verdict] }}</td>
+      <td>{{ review_labels[row.review_state] }}</td>
+      <td class="num">{{ row.priority_score }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

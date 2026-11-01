@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}{{ label }}{% endblock %}
+{% block content %}
+<h1>{{ label }}</h1>
+<p class="meta">Processo <a href="/processo?numero={{ process_number | urlencode }}">{{ process_number }}</a> · documento {{ document_id }} · <a href="/documento/{{ document_id }}/original">PDF original</a></p>
+{% for page in pages %}
+<article class="pagina"><h2>Página {{ page.number }}</h2><p>{{ page.html }}</p></article>
+{% endfor %}
+{% endblock %}

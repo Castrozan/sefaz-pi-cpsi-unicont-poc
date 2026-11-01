@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{{ analysis.process_number }}{% endblock %}
+{% block content %}
+<h1>Processo {{ analysis.process_number }}</h1>
+<p class="meta">{{ analysis.category | category }} · {{ analysis.organ_name }} · {{ analysis.nucleus_code }} · {{ analysis.process_value | money }} · {{ analysis.documents | length }} documentos</p>
+{% if error %}<p class="erro">{{ error }}</p>{% endif %}
+{% if protocol %}<p class="sucesso">Parecer aprovado e enviado à interface simulada do SINCIN+. Protocolo {{ protocol }}.</p>{% endif %}
+<section class="sintese">
+  <div class="resumo">
+    <h2>Resumo</h2>
+    <p>{{ analysis.summary }}</p>
+  </div>
+  <div class="alerta-risco {{ analysis.risk.level }}">
+    <h2>Risco {{ risk_labels[analysis.risk.level] | lower }}</h2>
+    {% if analysis.risk.reasons %}<ul>{% for reason in analysis.risk.reasons %}<li>{{ reason }}</li>{% endfor %}</ul>{% else %}<p>Nenhum alerta nos critérios verificados.</p>{% endif %}
+  </div>
+</section>
+<section>
+  <h2>Verificação de conformidade</h2>
+  <p class="nota">Critérios ilustrativos derivados de normas públicas; a lista oficial será definida pela UNICONT.</p>
+  <table class="criterios">
+    <thead><tr><th>Critério</th><th>Situação</th><th>Fundamento</th><th>Evidência citada</th></tr></thead>
+    <tbody>
+    {% for check in analysis.checks %}
+      <tr class="{{ check.status }}">
+        <td><b>{{ check.code }}</b> {{ check.title }}<br><small>{{ check.rationale }}</small></td>
+        <td><span class="situacao {{ check.status }}">{{ status_labels[check.status] }}</span></td>
+        <td><small>{{ check.legal_basis }}</small></td>
+        <td>{% for evidence in check.evidence %}<a class="citacao" href="/documento/{{ evidence.document_id }}?trecho={{ evidence.quote | urlencode }}#citacao">{{ evidence.document_label or 'Documento' }}, p. {{ evidence.page_number }}<q>{{ evidence.quote | truncate(110) }}</q></a>{% else %}<small>—</small>{% endfor %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</section>
+<section class="decisao">
+  <h2>Decisão do analista</h2>
+  {% if analysis.review_state == 'aguardando_analista' %}
+  <form method="post" action="/processo/decisao">
+    <input type="hidden" name="numero" value="{{ analysis.process_number }}">
+    <label>Parecer preliminar, editável pelo analista<textarea name="parecer" rows="12">{{ analysis.opinion_draft }}</textarea></label>
+    <label>Analista responsável<input name="analista" placeholder="Nome do analista"></label>
+    <label>Justificativa, obrigatória para devolver<input name="justificativa"></label>
+    <div class="acoes">
+      <button name="decisao" value="aprovar">Aprovar e enviar ao SINCIN+</button>
+      <button class="secundario" name="decisao" value="devolver">Devolver sem enviar</button>
+    </div>
+  </form>
+  {% else %}
+  <p>{{ review_labels[analysis.review_state] }}: {{ analysis.analyst_name }}{% if analysis.analyst_note %}, “{{ analysis.analyst_note }}”{% endif %}.</p>
+  {% endif %}
+</section>
+<section>
+  <h2>Documentos classificados</h2>
+  <table>
+    <thead><tr><th>Documento</th><th>Título no SEI</th><th>Tipo atribuído</th><th>Método</th><th>Valor</th><th>CNPJ</th></tr></thead>
+    <tbody>
+    {% for document in analysis.documents %}
+      <tr>
+        <td><a href="/documento/{{ document.document_id }}">{{ document.document_id[-3:] }}</a>{% if document.was_scanned %} <small>digitalizado</small>{% endif %}</td>
+        <td>{{ document.declared_title | truncate(38) }}</td>
+        <td>{{ document.label }}</td>
+        <td>{{ document.method }}</td>
+        <td>{{ document.fields.amount.value | money if document.fields.amount else '—' }}</td>
+        <td>{{ document.fields.cnpj.value if document.fields.cnpj else '—' }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</section>
+<p><a href="/auditoria?numero={{ analysis.process_number | urlencode }}">Abrir registro auditável desta análise</a></p>
+{% endblock %}

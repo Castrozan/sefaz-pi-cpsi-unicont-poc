@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Assistente de conformidade{% endblock %} · UNICONT</title>
+  <link rel="stylesheet" href="/estatico/estilo.css">
+</head>
+<body>
+  <header class="topo">
+    <a class="marca" href="/">Assistente de conformidade<small>Núcleos de Controle Interno</small></a>
+    <nav>
+      <a href="/">Fila</a>
+      <a href="/busca">Busca</a>
+      <a href="/painel">Painel</a>
+      <a href="/avaliacao">Avaliação</a>
+    </nav>
+  </header>
+  <p class="aviso">Prova de conceito com dados sintéticos. Nenhum processo, órgão, pessoa ou empresa aqui é real. O sistema redige; quem decide é o analista.</p>
+  <main>{% block content %}{% endblock %}</main>
+</body>
+</html>

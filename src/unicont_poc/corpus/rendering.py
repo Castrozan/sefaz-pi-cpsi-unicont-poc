@@ -5,6 +5,7 @@ from random import Random
 
 import fitz
 from PIL import Image, ImageFilter
+from reportlab import rl_config
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
@@ -14,6 +15,7 @@ from xml.sax.saxutils import escape
 
 from unicont_poc.corpus.contract import DocumentDraft
 
+rl_config.invariant = 1
 SYNTHETIC_NOTICE = "DOCUMENTO SINTÉTICO – SEM VALOR LEGAL – PoC CPSI 001/2026"
 _BODY = ParagraphStyle("corpo", fontName="Helvetica", fontSize=10.5, leading=15, spaceAfter=8)
 _TITLE = ParagraphStyle(
@@ -59,4 +61,4 @@ def convert_to_scanned_pdf(text_pdf: bytes, random_source: Random) -> bytes:
         _degrade_as_scan(page_image, random_source).save(encoded, format="JPEG", quality=random_source.randint(45, 70))
         new_page = scanned.new_page(width=page.rect.width, height=page.rect.height)
         new_page.insert_image(new_page.rect, stream=encoded.getvalue())
-    return scanned.tobytes(deflate=True)
+    return scanned.tobytes(deflate=True, no_new_id=True)

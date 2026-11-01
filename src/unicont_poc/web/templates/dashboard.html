@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Painel{% endblock %}
+{% block content %}
+<h1>Painel dos Núcleos de Controle Interno</h1>
+<div class="numeros">
+  <div><strong>{{ dashboard.total }}</strong><span>processos analisados</span></div>
+  <div><strong>{{ dashboard.nucleus_count }}</strong><span>núcleos com processos</span></div>
+  {% for category, count in dashboard.category_counts.items() %}<div><strong>{{ count }}</strong><span>{{ category | category }}</span></div>{% endfor %}
+</div>
+<section>
+  <h2>Inconsistências mais frequentes</h2>
+  <ul class="barras">
+  {% for item in dashboard.top_inconsistencies %}
+    <li><span>{{ item.code }} {{ item.title }}</span><i style="width: {{ (item.share * 100) | round(0) }}%"></i><b>{{ item.count }}</b></li>
+  {% endfor %}
+  </ul>
+</section>
+{% if dashboard.pending_reasons %}
+<section>
+  <h2>Gargalos: critérios que mais pedem conferência humana</h2>
+  <ul>{% for item in dashboard.pending_reasons %}<li>{{ item.code }} {{ item.title }}: {{ item.count }}</li>{% endfor %}</ul>
+</section>
+{% endif %}
+<section>
+  <h2>Núcleos com mais processos de risco alto</h2>
+  <table>
+    <thead><tr><th>Núcleo</th><th class="num">Processos</th><th class="num">Risco alto</th><th class="num">Risco médio</th><th class="num">Apontamentos</th><th class="num">Aguardando</th></tr></thead>
+    <tbody>{% for nucleus in dashboard.nuclei %}<tr>
+      <td><a href="/?nucleo={{ nucleus.nucleus_code }}">{{ nucleus.nucleus_code }}</a></td><td class="num">{{ nucleus.processos }}</td><td class="num">{{ nucleus.risco_alto or 0 }}</td><td class="num">{{ nucleus.risco_medio or 0 }}</td><td class="num">{{ nucleus.apontamentos or 0 }}</td><td class="num">{{ nucleus.aguardando_analista or 0 }}</td>
+    </tr>{% endfor %}</tbody>
+  </table>
+</section>
+{% endblock %}
