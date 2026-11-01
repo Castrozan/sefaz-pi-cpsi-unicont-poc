@@ -10,7 +10,7 @@ from typing import Any
 
 from unicont_poc.corpus.processes.blueprint import ProcessBlueprint
 from unicont_poc.corpus.processes.builder import build_blueprint
-from unicont_poc.corpus.contract import DocumentPlan, TemplateFamily
+from unicont_poc.corpus.contract import DocumentDraft, DocumentPlan, TemplateFamily
 from unicont_poc.corpus.families.standard import StandardTemplateFamily
 from unicont_poc.corpus.rendering import convert_to_scanned_pdf, render_text_pdf
 from unicont_poc.domain import ProcessCategory
@@ -39,8 +39,9 @@ def template_family_named(name: str) -> TemplateFamily:
     return HeldOutTemplateFamily()
 
 
-def expected_fields(plan: DocumentPlan) -> dict[str, str]:
-    fields = {"process_number": plan.slots["process_number"]}
+def expected_fields(plan: DocumentPlan, draft: DocumentDraft) -> dict[str, str]:
+    rendered_text = " ".join((draft.title or "", *draft.paragraphs))
+    fields = {"process_number": plan.slots["process_number"]} if plan.slots["process_number"] in rendered_text else {}
     for slot in AMOUNT_SLOTS:
         if plan.slots.get(slot) is not None:
             fields["amount"] = f"{plan.slots[slot]:.2f}"
@@ -80,7 +81,7 @@ def _render_process(arguments: tuple[ProcessBlueprint, int, Path]) -> dict[str, 
         gold_documents[plan.document_id] = {
             "document_type": plan.document_type.value,
             "was_scanned": was_scanned,
-            "fields": expected_fields(plan),
+            "fields": expected_fields(plan, draft),
         }
     return {
         "manifest": {

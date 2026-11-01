@@ -43,16 +43,14 @@ def _add_invoices(
     invoice_numbers: list[str] = []
     for index, amount in enumerate(invoice_amounts):
         invoice_number = str(random_source.randint(1000, 899_999))
-        supplier_cnpj = invoice_cnpj
         if sibling_invoice is not None and index == 0:
             invoice_number = sibling_invoice["invoice_number"]
-            supplier_cnpj = sibling_invoice["supplier_cnpj"]
         invoice_numbers.append(invoice_number)
         writer.add(
             DocumentType.NOTA_FISCAL,
             invoice_number=invoice_number,
             supplier_name=parties.supplier_name,
-            supplier_cnpj=supplier_cnpj,
+            supplier_cnpj=invoice_cnpj,
             description=description,
             amount=amount,
             issue_date=invoice_date + timedelta(days=index),
@@ -93,8 +91,8 @@ def build_payment_process(
     irregular = set(blueprint.irregularities)
     scenario = random_source.choice(OBJECT_SCENARIOS)
     parties = PaymentParties(
-        supplier_name=random_source.choice(SUPPLIER_NAMES),
-        supplier_cnpj=synthetic_cnpj(random_source),
+        supplier_name=sibling_invoice["supplier_name"] if sibling_invoice else random_source.choice(SUPPLIER_NAMES),
+        supplier_cnpj=sibling_invoice["supplier_cnpj"] if sibling_invoice else synthetic_cnpj(random_source),
         fiscal_name=person_name(random_source),
         contract_number=f"{random_source.randint(1, 240):03d}/2026",
     )

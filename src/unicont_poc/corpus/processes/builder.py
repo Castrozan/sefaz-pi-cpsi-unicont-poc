@@ -18,6 +18,7 @@ MUTUALLY_EXCLUSIVE_IRREGULARITIES: tuple[frozenset[str], ...] = (
     frozenset({"CON-03", "CON-08"}),
     frozenset({"CON-02", "CON-09"}),
     frozenset({"PRE-01", "PRE-06"}),
+    frozenset({"PRE-02", "PRE-03"}),
 )
 
 
@@ -63,7 +64,7 @@ def build_blueprint(
         build_payment_process(blueprint, random_source, sibling_invoice)
         if not duplicates_invoice:
             earlier_invoices.extend(
-                {key: plan.slots[key] for key in ("invoice_number", "supplier_cnpj", "amount")}
+                {key: plan.slots[key] for key in ("invoice_number", "supplier_name", "supplier_cnpj", "amount")}
                 for plan in blueprint.plans
                 if plan.document_type is DocumentType.NOTA_FISCAL
             )

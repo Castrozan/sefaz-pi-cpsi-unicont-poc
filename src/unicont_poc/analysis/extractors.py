@@ -39,6 +39,7 @@ DATE_LABELS: dict[str, str] = {
     "delivered_on": r"protocolad[oa] em|entregue em|apresentad[oa] em|recebid[oa] em",
     "report_deadline": r"prestacao de contas|prazo",
 }
+EXPENSE_ROW_WIDTH = 240
 Extractor = Callable[[ClassifiedDocument], None]
 
 
@@ -158,12 +159,25 @@ def _extract_statement_balances(classified: ClassifiedDocument) -> None:
 
 
 def _extract_expenses(classified: ClassifiedDocument) -> None:
+    text = classified.document.canonical_text
+    amounts = find_money(text)
+    dates = find_dates(text)
     rows = []
-    for page in classified.document.pages:
-        for line in page.text.splitlines():
-            dates, amounts = find_dates(line), find_money(line)
-            if dates and amounts:
-                rows.append({"date": dates[0].value, "amount": amounts[-1].value, "line": line.strip()})
+    for position, row_date in enumerate(dates):
+        limit = dates[position + 1].start if position + 1 < len(dates) else len(text)
+        row_amounts = [
+            match
+            for match in amounts
+            if row_date.end <= match.start < limit and match.start - row_date.end < EXPENSE_ROW_WIDTH
+        ]
+        if row_amounts:
+            rows.append(
+                {
+                    "date": row_date.value,
+                    "amount": row_amounts[0].value,
+                    "line": text[row_date.start : row_amounts[0].end],
+                }
+            )
     if rows:
         classified.fields["expenses"] = ExtractedField(
             rows, Evidence(classified.document.document_id, 1, rows[0]["line"], classified.label)
