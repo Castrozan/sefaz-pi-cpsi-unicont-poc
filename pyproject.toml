@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unicont-poc"
+version = "0.1.0"
+description = "PoC do assistente de conformidade para os Núcleos de Controle Interno do Piauí"
+requires-python = ">=3.12"
+
+[project.scripts]
+unicont-poc = "unicont_poc.cli:main"
+unicont-poc-demo = "unicont_poc.cli:demo"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+unicont_poc = ["web/templates/*.html", "web/static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 120
