@@ -1,7 +1,7 @@
 from datetime import date
 from decimal import Decimal
 
-from unicont_poc.analysis.parsing import find_cnpjs, find_dates, find_money, fold
+from unicont_poc.analysis.parsing import excerpt, find_cnpjs, find_dates, find_money, fold
 
 
 def test_fold_preserves_length_so_offsets_map_back_to_the_original():
@@ -27,3 +27,8 @@ def test_dates_numeric_dotted_and_long():
 
 def test_impossible_date_is_ignored():
     assert find_dates("31/02/2026") == []
+
+
+def test_excerpt_does_not_cut_words():
+    text = "alfa beta gama delta epsilon zeta eta teta iota kapa"
+    assert excerpt(text, 21, 28, margin=9) == "delta epsilon zeta"

@@ -33,7 +33,7 @@
       <td><span class="risco {{ row.risk_level }}">{{ risk_labels[row.risk_level] }}</span></td>
       <td>{{ verdict_labels[row.verdict] }}</td>
       <td>{{ review_labels[row.review_state] }}</td>
-      <td class="num">{{ row.priority_score }}</td>
+      <td class="num">{{ row.priority_score | score }}</td>
     </tr>
   {% endfor %}
   </tbody>

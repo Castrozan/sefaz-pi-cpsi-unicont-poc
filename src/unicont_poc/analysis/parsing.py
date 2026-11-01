@@ -103,4 +103,16 @@ def nearest_after_label(text: str, label_pattern: str, candidates: list[Match], 
 
 
 def excerpt(text: str, start: int, end: int, margin: int = 70) -> str:
-    return text[max(0, start - margin) : min(len(text), end + margin)].strip()
+    window_start = max(0, start - margin)
+    window_end = min(len(text), end + margin)
+    if window_start and " " in text[window_start:start]:
+        window_start = text.index(" ", window_start) + 1
+    if window_end < len(text) and " " in text[end:window_end]:
+        window_end = text.rindex(" ", end, window_end)
+    return text[window_start:window_end].strip()
+
+
+def word_bounded_prefix(text: str, limit: int) -> str:
+    if len(text) <= limit:
+        return text
+    return text[: text.rfind(" ", 0, limit) if " " in text[:limit] else limit]

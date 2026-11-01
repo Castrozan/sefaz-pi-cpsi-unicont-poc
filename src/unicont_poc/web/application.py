@@ -38,6 +38,7 @@ def create_application(store: AnalysisStore, corpus_directory: Path, report_path
         category=presentation.category_label,
         document_type=presentation.document_type_label,
         percent=presentation.percent_label,
+        score=presentation.score_label,
         snippet=presentation.highlighted_snippet,
     )
     environment.globals.update(

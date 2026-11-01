@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from unicont_poc.analysis.parsing import word_bounded_prefix
 from unicont_poc.corpus.catalog import ChecklistItem
 from unicont_poc.domain import (
     AdministrativeProcess,
@@ -11,6 +12,8 @@ from unicont_poc.domain import (
     DocumentType,
     Evidence,
 )
+
+SYNTHETIC_NOTICE = "DOCUMENTO SINTÉTICO – SEM VALOR LEGAL – PoC CPSI 001/2026"
 
 
 @dataclass(frozen=True)
@@ -37,8 +40,8 @@ class ProcessView:
 
 
 def document_evidence(document: ClassifiedDocument) -> Evidence:
-    text = document.document.canonical_text
-    return Evidence(document.document.document_id, 1, text[:140], document.label)
+    text = document.document.canonical_text.removeprefix(SYNTHETIC_NOTICE).strip()
+    return Evidence(document.document.document_id, 1, word_bounded_prefix(text, 140), document.label)
 
 
 def result(

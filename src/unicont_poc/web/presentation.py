@@ -42,6 +42,10 @@ def percent_label(value: float | None) -> str:
     return "—" if value is None else f"{value * 100:.1f}%".replace(".", ",")
 
 
+def score_label(value: float) -> str:
+    return f"{value:.1f}".replace(".", ",")
+
+
 def highlighted_snippet(snippet: str | None) -> Markup:
     escaped = str(escape(snippet or ""))
     return Markup(escaped.replace("[[", "<mark>").replace("]]", "</mark>"))
