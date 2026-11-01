@@ -15,7 +15,8 @@ Esquema:
  "verificacoes": [{"codigo": "...", "status": "conforme|nao_conforme|nao_verificavel", "justificativa": "uma frase", "citacoes": [{"document_id": "...", "trecho": "..."}]}],
  "classificacoes": [{"document_id": "...", "tipo": "...", "trecho": "..."}],
  "campos": [{"document_id": "...", "campo": "...", "valor": "...", "trecho": "..."}]}
-Em "campos": valores monetários como 1234.56, datas como AAAA-MM-DD, CNPJ como 00.000.000/0000-00."""
+Em "campos": valores monetários como 1234.56, datas como AAAA-MM-DD, CNPJ como 00.000.000/0000-00.
+Para documento sem tipo confiável, diga o tipo em "classificacoes" e extraia em "campos" os itens de "campos_por_tipo" que o documento trouxer."""
 
 REQUIRED_FIELDS: dict[DocumentType, tuple[str, ...]] = {
     DocumentType.NOTA_FISCAL: ("amount", "cnpj", "issue_date", "invoice_number", "description"),
@@ -37,9 +38,16 @@ SEMANTIC_SOURCES: dict[ProcessCategory, tuple[DocumentType, ...]] = {
     ProcessCategory.CONTRATACAO: (DocumentType.TERMO_REFERENCIA, DocumentType.CONTRATO, DocumentType.PARECER_JURIDICO),
     ProcessCategory.PRESTACAO_DE_CONTAS: (DocumentType.PLANO_TRABALHO, DocumentType.RELACAO_PAGAMENTOS),
 }
-SEMANTIC_EXCERPT_CHARACTERS = 1100
+SEMANTIC_GUIDANCE = {
+    "PAG-10": "Compare a natureza do item faturado com o objeto do contrato; item acessório do objeto é compatível.",
+    "PAG-11": "É não conforme somente falha de execução não sanada; incidente resolvido ou sem glosa é conforme.",
+    "CON-08": "É não conforme parecer contrário ou condicionado a correção ainda pendente; recomendação já cumprida é conforme.",
+    "CON-09": "Compare somente a natureza do objeto; diferença de redação sem mudança de objeto é conforme.",
+    "PRE-07": "Compare somente a natureza de cada despesa com os itens autorizados; ignore valores, datas e totais.",
+}
+SEMANTIC_EXCERPT_CHARACTERS = 1000
 UNCERTAIN_EXCERPT_CHARACTERS = 500
-MAXIMUM_UNCERTAIN_DOCUMENTS = 6
+MAXIMUM_UNCERTAIN_DOCUMENTS = 12
 
 
 def _document_block(classified: ClassifiedDocument, limit: int) -> dict:
@@ -57,7 +65,10 @@ def _missing_fields(classified: ClassifiedDocument) -> list[str]:
 def build_user_prompt(view: ProcessView) -> str:
     semantic_items = [item for item in checklist_for(view.process.category) if item.is_semantic]
     sources = view.of_type(*SEMANTIC_SOURCES[view.process.category])
-    uncertain = [document for document in view.documents if needs_language_review(document)]
+    uncertain = sorted(
+        (document for document in view.documents if needs_language_review(document)),
+        key=lambda document: (document.value("amount") is None, document.value("cnpj") is None),
+    )
     incomplete = [
         {**_document_block(document, SEMANTIC_EXCERPT_CHARACTERS), "campos_faltantes": _missing_fields(document)}
         for document in view.documents
@@ -67,8 +78,10 @@ def build_user_prompt(view: ProcessView) -> str:
         "processo": view.process.process_number,
         "categoria": view.process.category.value,
         "quantidade_de_documentos": len(view.documents),
-        "tipos_possiveis": [document_type.value for document_type in DocumentType],
-        "verificacoes_pedidas": [{"codigo": item.code, "criterio": item.title} for item in semantic_items],
+        "verificacoes_pedidas": [
+            {"codigo": item.code, "criterio": item.title, "orientacao": SEMANTIC_GUIDANCE[item.code]}
+            for item in semantic_items
+        ],
         "documentos_para_verificacao": [_document_block(document, SEMANTIC_EXCERPT_CHARACTERS) for document in sources],
         "documentos_sem_tipo_confiavel": [
             _document_block(document, UNCERTAIN_EXCERPT_CHARACTERS)
@@ -76,4 +89,7 @@ def build_user_prompt(view: ProcessView) -> str:
         ],
         "documentos_com_campos_faltantes": incomplete,
     }
+    if uncertain:
+        payload["tipos_possiveis"] = [document_type.value for document_type in DocumentType]
+        payload["campos_por_tipo"] = {kind.value: list(names) for kind, names in REQUIRED_FIELDS.items()}
     return json.dumps(payload, ensure_ascii=False)
