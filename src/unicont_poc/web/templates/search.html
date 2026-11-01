@@ -2,6 +2,7 @@
 {% block title %}Busca{% endblock %}
 {% block content %}
 <h1>Busca por tipo, campo ou palavra-chave</h1>
+{% if static_site %}<p class="nota">A busca roda neste navegador, com SQLite compilado para WebAssembly, sobre o mesmo índice e a mesma consulta da aplicação. O tempo exibido é o deste navegador; não é a medida do relatório de avaliação.</p>{% endif %}
 <form class="filtros busca" method="get">
   <label>Palavra-chave <input name="texto" value="{{ form.texto }}" placeholder="ressalva, limpeza…"></label>
   <label>Tipo <select name="tipo"><option value="">Todos</option>{% for value, label in types %}<option value="{{ value }}" {% if form.tipo == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
@@ -11,6 +12,9 @@
   <label>Valor máximo <input name="maximo" value="{{ form.maximo }}"></label>
   <button>Buscar</button>
 </form>
+{% if static_site %}<p class="contagem" id="situacao-da-busca" role="status"></p>
+<div id="resultados-da-busca"></div>
+{% endif %}
 {% if has_query %}
 <p class="contagem">{{ results | length }} resultado(s) exibido(s) em {{ elapsed }} ms</p>
 <table>
@@ -18,8 +22,8 @@
   <tbody>
   {% for result in results %}
     <tr>
-      <td><a href="/processo?numero={{ result.process_number | urlencode }}">{{ result.process_number }}</a></td>
-      <td><a href="/documento/{{ result.document_id }}">{{ result.document_id[-3:] }}</a></td>
+      <td><a href="{{ routes.process(result.process_number) }}">{{ result.process_number }}</a></td>
+      <td><a href="{{ routes.document(result.document_id) }}">{{ result.document_id[-3:] }}</a></td>
       <td>{{ result.label }}</td>
       <td>{{ result.amount | money }}</td>
       <td>{{ result.cnpj or '—' }}</td>

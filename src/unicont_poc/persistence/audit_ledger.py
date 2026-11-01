@@ -15,9 +15,12 @@ class AuditLedger:
     def __init__(self, connection: sqlite3.Connection) -> None:
         self.connection = connection
 
-    def append(self, event_type: str, process_number: str, payload: dict) -> str:
+    def head_hash(self) -> str:
         last = self.connection.execute("SELECT entry_hash FROM audit_ledger ORDER BY sequence DESC LIMIT 1").fetchone()
-        previous_hash = last[0] if last else GENESIS_HASH
+        return last[0] if last else GENESIS_HASH
+
+    def append(self, event_type: str, process_number: str, payload: dict) -> str:
+        previous_hash = self.head_hash()
         payload_json = json.dumps(payload, ensure_ascii=False, sort_keys=True)
         entry_hash = _chain_hash(previous_hash, event_type, process_number, payload_json)
         self.connection.execute(

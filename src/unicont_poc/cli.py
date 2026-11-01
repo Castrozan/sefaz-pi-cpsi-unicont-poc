@@ -5,6 +5,7 @@ import gzip
 import json
 import os
 import shutil
+import tempfile
 from pathlib import Path
 
 from unicont_poc.adapters.language_models import PromptCollector, ReplayLanguageModel, request_key
@@ -139,11 +140,26 @@ def command_report(arguments: argparse.Namespace) -> None:
     )
 
 
+def _restore_snapshot(database: Path) -> None:
+    database.parent.mkdir(parents=True, exist_ok=True)
+    with gzip.open(DEMO_SNAPSHOT, "rb") as snapshot, database.open("wb") as restored:
+        shutil.copyfileobj(snapshot, restored)
+
+
+def command_export_site(arguments: argparse.Namespace) -> None:
+    from unicont_poc.web.static_export import export_site
+
+    with tempfile.TemporaryDirectory() as directory:
+        database = Path(directory) / "estado.sqlite"
+        _restore_snapshot(database)
+        store = AnalysisStore(database)
+        print(export_site(store, DEMO_REPORT, Path(arguments.output), arguments.base))
+        store.connection.close()
+
+
 def demo() -> None:
     if not DEMO_DATABASE.exists():
-        DEMO_DATABASE.parent.mkdir(parents=True, exist_ok=True)
-        with gzip.open(DEMO_SNAPSHOT, "rb") as snapshot, DEMO_DATABASE.open("wb") as database:
-            shutil.copyfileobj(snapshot, database)
+        _restore_snapshot(DEMO_DATABASE)
     _serve(DEMO_DATABASE, CORPUS_ROOT / "avaliacao", DEMO_REPORT, 8000)
 
 
@@ -176,6 +192,10 @@ def main() -> None:
     serving.add_argument("--banco", default=str(DEMO_DATABASE))
     serving.add_argument("--porta", type=int, default=8000)
     serving.set_defaults(handler=command_serve)
+    site = commands.add_parser("exportar-site")
+    site.add_argument("--saida", dest="output", default="var/site")
+    site.add_argument("--base", default="")
+    site.set_defaults(handler=command_export_site)
     arguments = parser.parse_args()
     arguments.handler(arguments)
 

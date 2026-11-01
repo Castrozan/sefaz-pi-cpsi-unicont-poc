@@ -16,7 +16,7 @@ unicont-poc-demo = "unicont_poc.cli:demo"
 where = ["src"]
 
 [tool.setuptools.package-data]
-unicont_poc = ["web/templates/*.html", "web/static/*"]
+unicont_poc = ["web/templates/*.html", "web/static/*", "web/site_estatico/*.js", "web/site_estatico/vendor/*/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

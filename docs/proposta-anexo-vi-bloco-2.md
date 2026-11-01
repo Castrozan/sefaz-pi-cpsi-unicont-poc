@@ -87,4 +87,4 @@ A solução é um protótipo desenvolvido para este desafio, sem uso comercial n
 
 ## Link do vídeo de demonstração (até 5 minutos, válido por, no mínimo, 6 meses)
 
-**[LUCAS]** Publicar o vídeo em local público com validade mínima de 6 meses e colar o link aqui. O arquivo está em `demo/demonstracao.mp4`, e o repositório é privado.
+**[LUCAS]** Publicar o vídeo em local público com validade mínima de 6 meses e colar o link aqui. O arquivo está em `demo/demonstracao.mp4`, em repositório público.

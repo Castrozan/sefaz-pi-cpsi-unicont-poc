@@ -24,3 +24,7 @@ Decisões tomadas sem consulta a Lucas, por instrução do briefing, com o motiv
 | 18 | CNPJ com raiz iniciada em 99 e dígitos válidos; órgãos "Órgão Sintético NN" | Item 35 do edital; colisão com CNPJ real é improvável, mas não impossível |
 | 19 | Correções depois da medição limitadas a texto, fundamentos, livro de auditoria e validação de aprovação | Nenhuma altera decisão de critério; o replay confirma os mesmos números |
 | 20 | Legendas embutidas no vídeo, sem narração | Geração de voz não tem orçamento autorizado |
+| 21 | Site público exportado dos mesmos templates, com rotas trocadas por `StaticRoutes`, em vez de uma segunda interface em JavaScript | Tela e números têm uma única origem; a exportação só lê `dados/` |
+| 22 | Busca do site com SQLite em WebAssembly sobre o índice FTS5 exportado | Mesmo índice, tokenizador e consulta do servidor; o teste compara os resultados com a busca em Python |
+| 23 | Decisões do site guardadas em `localStorage`, com protocolo `SIMULADO-` e cadeia de hashes local | Site estático não tem servidor; a regra de recusa é a mesma, e nada sai do navegador |
+| 24 | PDFs originais fora do site; o link aponta para o corpus da versão `avaliacao-1` | São 94 MB fora do escopo pedido; o texto de cada documento está no site |

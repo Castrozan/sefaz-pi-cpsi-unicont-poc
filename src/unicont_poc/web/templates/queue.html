@@ -7,12 +7,12 @@
   <div class="alto"><strong>{{ dashboard.risk_counts.get('alto', 0) }}</strong><span>risco alto</span></div>
   <div class="medio"><strong>{{ dashboard.risk_counts.get('medio', 0) }}</strong><span>risco médio</span></div>
   <div class="baixo"><strong>{{ dashboard.risk_counts.get('baixo', 0) }}</strong><span>risco baixo</span></div>
-  <div><strong>{{ dashboard.review_counts.get('aguardando_analista', 0) }}</strong><span>aguardando analista</span></div>
+  <div><strong data-contador-aguardando>{{ dashboard.review_counts.get('aguardando_analista', 0) }}</strong><span>aguardando analista</span></div>
 </div>
 {% if alerts %}
 <section class="alertas">
   <h2>Possíveis duplicidades entre processos</h2>
-  <ul>{% for alert in alerts %}<li><a href="/processo?numero={{ alert.process_number | urlencode }}">{{ alert.process_number }}</a> {{ alert.rationale }}</li>{% endfor %}</ul>
+  <ul>{% for alert in alerts %}<li><a href="{{ routes.process(alert.process_number) }}">{{ alert.process_number }}</a> {{ alert.rationale }}</li>{% endfor %}</ul>
 </section>
 {% endif %}
 <form class="filtros" method="get">
@@ -26,13 +26,13 @@
   <thead><tr><th>Processo</th><th>Categoria</th><th>Núcleo</th><th>Risco</th><th>Resultado preliminar</th><th>Situação</th><th class="num">Prioridade</th></tr></thead>
   <tbody>
   {% for row in rows %}
-    <tr>
-      <td><a href="/processo?numero={{ row.process_number | urlencode }}">{{ row.process_number }}</a></td>
+    <tr data-processo="{{ row.process_number }}" data-nucleo="{{ row.nucleus_code }}" data-risco="{{ row.risk_level }}" data-situacao="{{ row.review_state }}">
+      <td><a href="{{ routes.process(row.process_number) }}">{{ row.process_number }}</a></td>
       <td>{{ row.category | category }}</td>
       <td>{{ row.nucleus_code }}</td>
       <td><span class="risco {{ row.risk_level }}">{{ risk_labels[row.risk_level] }}</span></td>
       <td>{{ verdict_labels[row.verdict] }}</td>
-      <td>{{ review_labels[row.review_state] }}</td>
+      <td data-celula-situacao>{{ review_labels[row.review_state] }}</td>
       <td class="num">{{ row.priority_score | score }}</td>
     </tr>
   {% endfor %}

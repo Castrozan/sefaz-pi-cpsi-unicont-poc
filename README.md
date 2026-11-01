@@ -4,6 +4,10 @@ Prova de conceito para o Desafio 01 (UNICONT) do CPSI 001/2026 da SEFAZ-PI. O si
 
 Usa somente dados sintéticos, conforme o item 35 do edital: nomes e números foram inventados, e coincidência com nome ou CNPJ real é acidental. Nenhum sistema da SEFAZ-PI foi acessado.
 
+## Demonstração pública
+
+[Abrir a demonstração no navegador](https://castrozan.github.io/sefaz-pi-cpsi-unicont-poc/). É uma exportação estática do estado da análise: fila, processo, documentos, busca, painel, avaliação e registro auditável. A faixa no topo de cada tela lista o que é simulado.
+
 ## Executar
 
 Requer Nix com flakes. Na raiz do repositório:
@@ -47,6 +51,17 @@ python -m unicont_poc.cli gerar desenvolvimento
 python -m unicont_poc.cli avaliar desenvolvimento --modo regras
 ```
 
+### Publicar o site
+
+```bash
+python -m unicont_poc.cli exportar-site --base /sefaz-pi-cpsi-unicont-poc
+python -m pytest tests/test_site_in_browser.py
+```
+
+O comando restaura `dados/estado-demo.sqlite.gz` em um banco temporário, renderiza os mesmos templates da aplicação e grava em `var/site`, que não pode existir antes. A publicação em GitHub Pages está em `.github/workflows/publicar-site.yml`. O teste de navegador aceita `UNICONT_SITE_URL` para rodar contra o endereço publicado.
+
+No site, a busca usa [SQLite em WebAssembly](https://www.npmjs.com/package/@sqlite.org/sqlite-wasm), versão copiada para `web/site_estatico/vendor`, com a mesma consulta FTS5 do servidor. Aprovar e devolver ficam no `localStorage` do navegador.
+
 ### Reproduzir a avaliação
 
 O replay do modelo exige o corpus exato da avaliação, porque as chaves do cache dependem do texto lido por OCR. Gerar de novo a partir da semente reproduz o gabarito e os documentos de texto, mas não as imagens digitalizadas, cujo ruído não tem semente. Por isso o corpus está publicado como anexo da [versão `avaliacao-1`](https://github.com/Castrozan/sefaz-pi-cpsi-unicont-poc/releases/tag/avaliacao-1):
@@ -70,4 +85,4 @@ As respostas em cache vieram de lotes de subagentes do Claude Code, porque não 
 
 ## Licença
 
-Código privado, sem licença de uso concedida.
+Código público para consulta, sem licença de uso concedida.

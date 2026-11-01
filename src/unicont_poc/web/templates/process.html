@@ -26,7 +26,7 @@
         <td><b>{{ check.code }}</b> {{ check.title }}<br><small>{{ check.rationale }}</small></td>
         <td><span class="situacao {{ check.status }}">{{ status_labels[check.status] }}</span></td>
         <td><small>{{ check.legal_basis }}</small></td>
-        <td>{% for evidence in check.evidence %}<a class="citacao" href="/documento/{{ evidence.document_id }}?trecho={{ evidence.quote | urlencode }}#citacao">{{ evidence.document_label or 'Documento' }}, p. {{ evidence.page_number }}<q>{{ evidence.quote | truncate(110) }}</q></a>{% else %}<small>—</small>{% endfor %}</td>
+        <td>{% for evidence in check.evidence %}<a class="citacao" href="{{ routes.document(evidence.document_id, evidence.quote) }}">{{ evidence.document_label or 'Documento' }}, p. {{ evidence.page_number }}<q>{{ evidence.quote | truncate(110) }}</q></a>{% else %}<small>—</small>{% endfor %}</td>
       </tr>
     {% endfor %}
     </tbody>
@@ -34,14 +34,18 @@
 </section>
 <section class="decisao">
   <h2>Decisão do analista</h2>
+  {% if static_site %}<p class="nota">Simulação: aprovar ou devolver fica guardado só neste navegador. Nada é enviado, nem ao SINCIN+ nem a qualquer servidor.</p>
+  <p class="erro" id="erro-da-decisao" role="alert" hidden></p>
+  <p class="sucesso" id="sucesso-da-decisao" role="status" hidden></p>
+  <p id="decisao-registrada" hidden></p>{% endif %}
   {% if analysis.review_state == 'aguardando_analista' %}
-  <form method="post" action="/processo/decisao">
+  <form method="post" action="{{ routes.decision_action }}"{% if static_site %} id="formulario-de-decisao" data-hash-da-cadeia="{{ ledger_head }}" data-entradas-da-cadeia="{{ ledger_entry_count }}" data-identificador-da-analise="{{ analysis.analysis_id }}" data-nucleo="{{ analysis.nucleus_code }}" data-criterios="{{ analysis.checks | map(attribute='code') | join(' ') }}" data-situacoes="{{ analysis.checks | map(attribute='status') | join(' ') }}"{% endif %}>
     <input type="hidden" name="numero" value="{{ analysis.process_number }}">
     <label>Parecer preliminar, editável pelo analista<textarea name="parecer" rows="12">{{ analysis.opinion_draft }}</textarea></label>
     <label>Analista responsável<input name="analista" placeholder="Nome do analista"></label>
     <label>Justificativa, obrigatória para devolver<input name="justificativa"></label>
     <div class="acoes">
-      <button name="decisao" value="aprovar">Aprovar e enviar ao SINCIN+</button>
+      <button name="decisao" value="aprovar">{{ 'Aprovar e simular envio ao SINCIN+' if static_site else 'Aprovar e enviar ao SINCIN+' }}</button>
       <button class="secundario" name="decisao" value="devolver">Devolver sem enviar</button>
     </div>
   </form>
@@ -56,7 +60,7 @@
     <tbody>
     {% for document in analysis.documents %}
       <tr>
-        <td><a href="/documento/{{ document.document_id }}">{{ document.document_id[-3:] }}</a>{% if document.was_scanned %} <small>digitalizado</small>{% endif %}</td>
+        <td><a href="{{ routes.document(document.document_id) }}">{{ document.document_id[-3:] }}</a>{% if document.was_scanned %} <small>digitalizado</small>{% endif %}</td>
         <td>{{ document.declared_title | truncate(38) }}</td>
         <td>{{ document.label }}</td>
         <td>{{ document.method }}</td>
@@ -67,5 +71,5 @@
     </tbody>
   </table>
 </section>
-<p><a href="/auditoria?numero={{ analysis.process_number | urlencode }}">Abrir registro auditável desta análise</a></p>
+<p><a href="{{ routes.audit(analysis.process_number) }}">Abrir registro auditável desta análise</a></p>
 {% endblock %}

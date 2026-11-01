@@ -2,7 +2,7 @@
 {% block title %}Registro auditável{% endblock %}
 {% block content %}
 <h1>Registro auditável</h1>
-<p class="meta">Processo <a href="/processo?numero={{ process_number | urlencode }}">{{ process_number }}</a>. Cadeia de hashes {{ 'íntegra' if is_intact else 'VIOLADA' }}, {{ entry_count }} entradas verificadas.</p>
+<p class="meta">Processo <a href="{{ routes.process(process_number) }}">{{ process_number }}</a>. Cadeia de hashes {{ 'íntegra' if is_intact else 'VIOLADA' }}, {{ entry_count }} entradas verificadas{% if static_site %} na exportação deste site{% endif %}.</p>
 {% for entry in entries %}
 <article class="pagina">
   <h2>#{{ entry.sequence }} {{ 'Análise concluída' if entry.event_type == 'analise_concluida' else 'Decisão do analista' }}</h2>
@@ -27,4 +27,5 @@
   {% endif %}
 </article>
 {% endfor %}
+{% if static_site %}<div id="registro-local" data-processo="{{ process_number }}" data-hash-da-cadeia="{{ ledger_head }}" data-entradas-da-cadeia="{{ entry_count }}"></div>{% endif %}
 {% endblock %}

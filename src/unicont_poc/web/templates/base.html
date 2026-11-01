@@ -4,19 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Assistente de conformidade{% endblock %} · UNICONT</title>
-  <link rel="stylesheet" href="/estatico/estilo.css">
+  <link rel="stylesheet" href="{{ routes.asset('estilo.css') }}">
 </head>
-<body>
+<body{% if static_site %} data-tela="{{ screen }}" data-base="{{ routes.base_path }}"{% endif %}>
   <header class="topo">
-    <a class="marca" href="/">Assistente de conformidade<small>Núcleos de Controle Interno</small></a>
+    <a class="marca" href="{{ routes.queue() }}">Assistente de conformidade<small>Núcleos de Controle Interno</small></a>
     <nav>
-      <a href="/">Fila</a>
-      <a href="/busca">Busca</a>
-      <a href="/painel">Painel</a>
-      <a href="/avaliacao">Avaliação</a>
+      <a href="{{ routes.queue() }}">Fila</a>
+      <a href="{{ routes.search() }}">Busca</a>
+      <a href="{{ routes.dashboard() }}">Painel</a>
+      <a href="{{ routes.evaluation() }}">Avaliação</a>
     </nav>
   </header>
+  {% if static_site %}{% include "aviso-site-estatico.html" %}{% endif %}
   <p class="aviso">Prova de conceito com dados sintéticos; coincidência com nome ou CNPJ real é acidental. O sistema redige; quem decide é o analista.</p>
   <main>{% block content %}{% endblock %}</main>
+  {% if static_site %}<script type="module" src="{{ routes.asset('site/site.js') }}"></script>{% endif %}
 </body>
 </html>

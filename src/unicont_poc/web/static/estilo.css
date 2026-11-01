@@ -60,3 +60,8 @@ dl { display: grid; grid-template-columns: 190px 1fr; gap: 4px 14px; font-size: 
 dt { color: var(--cinza); } dd { margin: 0; overflow-wrap: anywhere; }
 code { font-family: "Plex Mono", monospace; font-size: 13px; }
 .hashes { font-size: 13px; padding-left: 16px; overflow-wrap: anywhere; }
+.faixa-sintetica { padding: 10px 32px; background: #ffe27a; color: var(--tinta); font-size: 15px; }
+.faixa-sintetica p { margin: 0; }
+.faixa-sintetica ul { margin: 6px 0; padding-left: 20px; }
+.faixa-sintetica a { color: var(--tinta); }
+.faixa-sintetica button { margin-top: 8px; }

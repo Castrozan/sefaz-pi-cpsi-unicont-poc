@@ -76,6 +76,31 @@ class AnalysisStore:
             "decided_at": row[4],
         }
 
+    def document(self, document_id: str) -> dict | None:
+        pages = self.connection.execute(
+            "SELECT page_number, body FROM page_text WHERE document_id = ? ORDER BY CAST(page_number AS INTEGER)",
+            (document_id,),
+        ).fetchall()
+        if not pages:
+            return None
+        label, process_number = self.connection.execute(
+            "SELECT label, process_number FROM indexed_documents WHERE document_id = ?", (document_id,)
+        ).fetchone()
+        return {"label": label, "process_number": process_number, "pages": pages}
+
+    def document_identifiers(self) -> list[str]:
+        rows = self.connection.execute("SELECT document_id FROM indexed_documents ORDER BY document_id").fetchall()
+        return [row[0] for row in rows]
+
+    def export_search_database(self, target: Path) -> None:
+        self.connection.execute("VACUUM INTO ?", (str(target),))
+        search_database = sqlite3.connect(target)
+        for table in ("analyses", "audit_ledger", "sincin_outbox"):
+            search_database.execute(f"DROP TABLE {table}")
+        search_database.commit()
+        search_database.execute("VACUUM")
+        search_database.close()
+
     def queue(self, nucleus_code: str = "", risk_level: str = "", review_state: str = "") -> list[dict]:
         clauses, parameters = [], []
         for column, value in (

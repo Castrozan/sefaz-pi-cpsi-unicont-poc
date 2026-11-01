@@ -16,6 +16,8 @@ from unicont_poc.persistence.search_index import SearchCriteria
 from unicont_poc.persistence.store import AnalysisStore
 from unicont_poc.web import presentation
 from unicont_poc.web.dashboard import build_dashboard, duplicate_alerts
+from unicont_poc.web.routes import ServerRoutes
+from unicont_poc.web.templating import build_template_environment
 
 WEB_DIRECTORY = Path(__file__).parent
 
@@ -31,23 +33,7 @@ def _parse_amount(text: str) -> float | None:
 def create_application(store: AnalysisStore, corpus_directory: Path, report_path: Path) -> FastAPI:
     application = FastAPI(title="UNICONT – assistente de conformidade", docs_url=None, redoc_url=None)
     application.mount("/estatico", StaticFiles(directory=WEB_DIRECTORY / "static"), name="estatico")
-    templates = Jinja2Templates(directory=WEB_DIRECTORY / "templates")
-    environment = templates.env
-    environment.filters.update(
-        money=presentation.money_label,
-        category=presentation.category_label,
-        document_type=presentation.document_type_label,
-        percent=presentation.percent_label,
-        score=presentation.score_label,
-        snippet=presentation.highlighted_snippet,
-    )
-    environment.globals.update(
-        status_labels=presentation.STATUS_LABELS,
-        risk_labels=presentation.RISK_LABELS,
-        verdict_labels=presentation.VERDICT_LABELS,
-        review_labels=presentation.REVIEW_LABELS,
-        group_labels=presentation.GROUP_LABELS,
-    )
+    templates = Jinja2Templates(env=build_template_environment(ServerRoutes()))
     review = AnalystReview(store, SincinOutboxStub(store))
 
     @application.get("/", response_class=HTMLResponse)
@@ -91,17 +77,18 @@ def create_application(store: AnalysisStore, corpus_directory: Path, report_path
 
     @application.get("/documento/{document_id}", response_class=HTMLResponse)
     def document_view(request: Request, document_id: str, trecho: str = "", numero: str = ""):
-        rows = store.connection.execute(
-            "SELECT page_number, body FROM page_text WHERE document_id = ? ORDER BY CAST(page_number AS INTEGER)",
-            (document_id,),
-        ).fetchall()
-        if not rows:
+        document = store.document(document_id)
+        if document is None:
             raise HTTPException(404, "Documento não encontrado")
-        metadata = store.connection.execute(
-            "SELECT label, process_number FROM indexed_documents WHERE document_id = ?", (document_id,)
-        ).fetchone()
-        pages = [{"number": number, "html": presentation.highlighted_page(body, trecho)} for number, body in rows]
-        context = {"document_id": document_id, "label": metadata[0], "process_number": metadata[1], "pages": pages}
+        pages = [
+            {"number": number, "html": presentation.highlighted_page(body, trecho)} for number, body in document["pages"]
+        ]
+        context = {
+            "document_id": document_id,
+            "label": document["label"],
+            "process_number": document["process_number"],
+            "pages": pages,
+        }
         return templates.TemplateResponse(request, "document.html", context)
 
     @application.get("/documento/{document_id}/original")

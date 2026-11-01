@@ -1,0 +1,42 @@
+name: Publicar site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publicar-site
+  cancel-in-progress: true
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b
+      - id: pages
+        uses: actions/configure-pages@v6
+      - name: Testar
+        run: nix develop -c python -m pytest -q tests/test_web.py tests/test_static_export.py tests/test_site_in_browser.py
+      - name: Exportar
+        run: nix develop -c python -m unicont_poc.cli exportar-site --base "${{ steps.pages.outputs.base_path }}"
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: var/site
+
+  publicar:
+    needs: construir
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.publicacao.outputs.page_url }}
+    steps:
+      - id: publicacao
+        uses: actions/deploy-pages@v5
