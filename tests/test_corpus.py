@@ -14,10 +14,10 @@ def small_request(name: str) -> CorpusRequest:
 
 
 def digest(directory: Path) -> str:
-    return hashlib.sha256((directory / "manifesto.jsonl").read_bytes()).hexdigest()
+    return hashlib.sha256((directory / "gabarito.jsonl").read_bytes()).hexdigest()
 
 
-def test_corpus_is_reproducible_from_the_seed(tmp_path):
+def test_gold_is_reproducible_from_the_seed(tmp_path):
     first = generate_corpus(small_request("a"), tmp_path, workers=2)
     second = generate_corpus(small_request("a"), tmp_path / "outra", workers=2)
     assert digest(first) == digest(second)

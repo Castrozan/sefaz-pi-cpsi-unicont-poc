@@ -26,6 +26,15 @@ REVIEW_LABELS = {
 }
 
 
+GROUP_LABELS = {
+    "pagamento": "Pagamento",
+    "contratacao": "Contratação",
+    "prestacao_de_contas": "Prestação de contas",
+    "padrao": "Texto conhecido pelas regras",
+    "inedita": "Texto inédito",
+}
+
+
 def money_label(value: object) -> str:
     return "—" if value is None else brazilian_money(Decimal(str(value)))
 

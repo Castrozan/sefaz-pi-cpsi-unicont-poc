@@ -46,6 +46,7 @@ def create_application(store: AnalysisStore, corpus_directory: Path, report_path
         risk_labels=presentation.RISK_LABELS,
         verdict_labels=presentation.VERDICT_LABELS,
         review_labels=presentation.REVIEW_LABELS,
+        group_labels=presentation.GROUP_LABELS,
     )
     review = AnalystReview(store, SincinOutboxStub(store))
 

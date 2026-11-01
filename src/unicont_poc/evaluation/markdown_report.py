@@ -5,6 +5,10 @@ def _percent(value: float | None) -> str:
     return "n/d" if value is None else f"{value * 100:.1f}%".replace(".", ",")
 
 
+def _decimal(value: float) -> str:
+    return str(value).replace(".", ",")
+
+
 def _table(headers: list[str], rows: list[list[object]]) -> str:
     lines = ["| # | " + " | ".join(headers) + " |", "|---|" + "---|" * len(headers)]
     for position, row in enumerate(rows, start=1):
@@ -41,7 +45,7 @@ def _edital_table(report: dict, wall_minutes_per_process: str) -> str:
             "Rastreabilidade",
             "100% com registro",
             f"{audit['com_documentos_criterios_resultado_modelo']} de {audit['analises']}",
-            f"Cadeia íntegra: {audit.get('cadeia_integra')}",
+            f"Cadeia íntegra: {'sim' if audit.get('cadeia_integra') else 'não'}",
         ],
         ["Integração", "Comprovada até M1", "Não demonstrada", "SEI e SINCIN+ simulados; APIs só no Marco P1"],
     ]
@@ -91,7 +95,7 @@ def render_report(model_report: dict, rules_report: dict, context: dict) -> str:
     confusion_rows = [
         [item["esperado"], item["obtido"], item["casos"]] for item in documents["confusoes_mais_frequentes"]
     ]
-    minutes = f"{context['total_minutes_per_process']:.2f} min por processo"
+    minutes = f"{context['total_minutes_per_process']:.2f} min por processo".replace(".", ",")
     time_section = model_report["tempo"]
     sections = [
         "# Relatório de avaliação da PoC UNICONT",
@@ -133,11 +137,11 @@ def render_report(model_report: dict, rules_report: dict, context: dict) -> str:
             else ""
         ),
         "## 7. Tempo\n\n"
-        + f"- Leitura, OCR, classificação e regras: {time_section['parede_por_processo_segundos']} s de parede por processo, com {context['workers']} processos paralelos, no ciclo de {time_section['parede_do_ciclo_segundos']} s (replay do modelo).\n"
-        + f"- Modelo de linguagem: {context['language_seconds_per_request']:.1f} s por pedido, medidos no lote sequencial por subagente. É aproximação, não latência de API.\n"
+        + f"- Leitura, OCR, classificação e regras: {_decimal(time_section['parede_por_processo_segundos'])} s de parede por processo, com {context['workers']} processos paralelos, no ciclo de {_decimal(time_section['parede_do_ciclo_segundos'])} s (replay do modelo).\n"
+        + f"- Modelo de linguagem: {str(round(context['language_seconds_per_request'], 1)).replace('.', ',')} s por pedido, medidos no lote sequencial por subagente. É aproximação, não latência de API.\n"
         + f"- Total estimado: {minutes}, contra a linha de base de 163,5 min de análise humana.\n"
         + "- A comparação não mede redução do tempo do analista. Isso exige estudo com analistas, previsto para a Fase 2.\n"
-        + f"- Busca: mediana de {model_report['busca']['mediana_ms']} ms e máximo de {model_report['busca']['maximo_ms']} ms em {model_report['busca']['consultas']} consultas sobre o ciclo.",
+        + f"- Busca: mediana de {_decimal(model_report['busca']['mediana_ms'])} ms e máximo de {_decimal(model_report['busca']['maximo_ms'])} ms em {model_report['busca']['consultas']} consultas sobre o ciclo.",
         context["limitations"],
     ]
     return "\n\n".join(sections) + "\n"

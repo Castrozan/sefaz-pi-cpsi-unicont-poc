@@ -14,6 +14,7 @@ from unicont_poc.analysis.review.language_review import LanguageModelReview
 from unicont_poc.analysis.review.rule_only_review import RuleOnlyReview
 from unicont_poc.corpus.generation import CorpusRequest, generate_corpus
 from unicont_poc.domain import ProcessCategory
+from unicont_poc.evaluation.report_command import write_report
 from unicont_poc.evaluation.runner import evaluate
 from unicont_poc.persistence.store import AnalysisStore
 
@@ -129,6 +130,10 @@ def command_serve(arguments: argparse.Namespace) -> None:
     _serve(Path(arguments.banco), CORPUS_ROOT / "avaliacao", DEMO_REPORT, arguments.porta)
 
 
+def command_report(arguments: argparse.Namespace) -> None:
+    write_report(DEMO_REPORT, DATA_ROOT / "avaliacao-regras.json", Path("docs/relatorio-de-avaliacao.md"))
+
+
 def demo() -> None:
     if not DEMO_DATABASE.exists():
         DEMO_DATABASE.parent.mkdir(parents=True, exist_ok=True)
@@ -161,6 +166,7 @@ def main() -> None:
     importing.add_argument("--modelo", required=True)
     importing.add_argument("--respostas", dest="replies", default="dados/respostas-do-modelo.jsonl")
     importing.set_defaults(handler=command_import_replies)
+    commands.add_parser("relatorio").set_defaults(handler=command_report)
     serving = commands.add_parser("servir")
     serving.add_argument("--banco", default=str(DEMO_DATABASE))
     serving.add_argument("--porta", type=int, default=8000)

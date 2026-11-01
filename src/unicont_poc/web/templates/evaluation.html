@@ -16,7 +16,7 @@
     <thead><tr><th>Grupo</th><th class="num">Processos</th><th class="num">Acerto</th><th class="num">Exato</th><th class="num">Detecção</th><th class="num">Falso alarme</th></tr></thead>
     <tbody>
     {% for group in [report.por_categoria, report.por_familia_de_template] %}{% for name, summary in group.items() %}
-      <tr><td>{{ name }}</td><td class="num">{{ summary.processos }}</td><td class="num">{{ summary.taxa_de_acerto_processo | percent }}</td><td class="num">{{ summary.acerto_exato_do_conjunto | percent }}</td><td class="num">{{ summary.deteccao_em_irregulares | percent }}</td><td class="num">{{ summary.falso_alarme_em_regulares | percent }}</td></tr>
+      <tr><td>{{ group_labels[name] }}</td><td class="num">{{ summary.processos }}</td><td class="num">{{ summary.taxa_de_acerto_processo | percent }}</td><td class="num">{{ summary.acerto_exato_do_conjunto | percent }}</td><td class="num">{{ summary.deteccao_em_irregulares | percent }}</td><td class="num">{{ summary.falso_alarme_em_regulares | percent }}</td></tr>
     {% endfor %}{% endfor %}
     </tbody>
   </table>

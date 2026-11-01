@@ -1,0 +1,553 @@
+{
+  "global": {
+    "processos": 500,
+    "taxa_de_acerto_processo": 0.714,
+    "acerto_exato_do_conjunto": 0.578,
+    "linha_de_base_sempre_conforme": 0.534,
+    "deteccao_em_irregulares": 0.9914,
+    "falso_alarme_em_regulares": 0.5281,
+    "com_item_nao_verificavel": 0.432
+  },
+  "acerto_ponderado_pela_composicao_real": 0.7164,
+  "por_categoria": {
+    "pagamento": {
+      "processos": 300,
+      "taxa_de_acerto_processo": 0.7167,
+      "acerto_exato_do_conjunto": 0.5767,
+      "linha_de_base_sempre_conforme": 0.5433,
+      "deteccao_em_irregulares": 0.9927,
+      "falso_alarme_em_regulares": 0.5153,
+      "com_item_nao_verificavel": 0.4833
+    },
+    "prestacao_de_contas": {
+      "processos": 100,
+      "taxa_de_acerto_processo": 0.64,
+      "acerto_exato_do_conjunto": 0.48,
+      "linha_de_base_sempre_conforme": 0.57,
+      "deteccao_em_irregulares": 1.0,
+      "falso_alarme_em_regulares": 0.6316,
+      "com_item_nao_verificavel": 0.37
+    },
+    "contratacao": {
+      "processos": 100,
+      "taxa_de_acerto_processo": 0.78,
+      "acerto_exato_do_conjunto": 0.68,
+      "linha_de_base_sempre_conforme": 0.47,
+      "deteccao_em_irregulares": 0.9811,
+      "falso_alarme_em_regulares": 0.4468,
+      "com_item_nao_verificavel": 0.34
+    }
+  },
+  "por_familia_de_template": {
+    "inedita": {
+      "processos": 250,
+      "taxa_de_acerto_processo": 0.468,
+      "acerto_exato_do_conjunto": 0.224,
+      "linha_de_base_sempre_conforme": 0.536,
+      "deteccao_em_irregulares": 0.9914,
+      "falso_alarme_em_regulares": 0.9851,
+      "com_item_nao_verificavel": 0.86
+    },
+    "padrao": {
+      "processos": 250,
+      "taxa_de_acerto_processo": 0.96,
+      "acerto_exato_do_conjunto": 0.932,
+      "linha_de_base_sempre_conforme": 0.532,
+      "deteccao_em_irregulares": 0.9915,
+      "falso_alarme_em_regulares": 0.0677,
+      "com_item_nao_verificavel": 0.004
+    }
+  },
+  "por_complexidade": {
+    "media": {
+      "processos": 195,
+      "taxa_de_acerto_processo": 0.6974,
+      "acerto_exato_do_conjunto": 0.5795,
+      "linha_de_base_sempre_conforme": 0.5692,
+      "deteccao_em_irregulares": 1.0,
+      "falso_alarme_em_regulares": 0.5315,
+      "com_item_nao_verificavel": 0.4359
+    },
+    "alta": {
+      "processos": 75,
+      "taxa_de_acerto_processo": 0.6667,
+      "acerto_exato_do_conjunto": 0.56,
+      "linha_de_base_sempre_conforme": 0.56,
+      "deteccao_em_irregulares": 1.0,
+      "falso_alarme_em_regulares": 0.5952,
+      "com_item_nao_verificavel": 0.52
+    },
+    "baixa": {
+      "processos": 230,
+      "taxa_de_acerto_processo": 0.7435,
+      "acerto_exato_do_conjunto": 0.5826,
+      "linha_de_base_sempre_conforme": 0.4957,
+      "deteccao_em_irregulares": 0.9828,
+      "falso_alarme_em_regulares": 0.5,
+      "com_item_nao_verificavel": 0.4
+    }
+  },
+  "por_criterio": [
+    {
+      "codigo": "PAG-01",
+      "criterio": "Nota fiscal anexada",
+      "semantico": false,
+      "casos_semeados": 7,
+      "verdadeiros_positivos": 7,
+      "falsos_positivos": 13,
+      "falsos_negativos": 0,
+      "nao_verificaveis": 0,
+      "precisao": 0.35,
+      "revocacao": 1.0
+    },
+    {
+      "codigo": "PAG-02",
+      "criterio": "Atesto de recebimento anexado",
+      "semantico": false,
+      "casos_semeados": 20,
+      "verdadeiros_positivos": 20,
+      "falsos_positivos": 16,
+      "falsos_negativos": 0,
+      "nao_verificaveis": 0,
+      "precisao": 0.5556,
+      "revocacao": 1.0
+    },
+    {
+      "codigo": "PAG-03",
+      "criterio": "Certidões de regularidade anexadas",
+      "semantico": false,
+      "casos_semeados": 27,
+      "verdadeiros_positivos": 27,
+      "falsos_positivos": 80,
+      "falsos_negativos": 0,
+      "nao_verificaveis": 0,
+      "precisao": 0.2523,
+      "revocacao": 1.0
+    },
+    {
+      "codigo": "PAG-04",
+      "criterio": "Certidões válidas na data do pagamento",
+      "semantico": false,
+      "casos_semeados": 21,
+      "verdadeiros_positivos": 11,
+      "falsos_positivos": 1,
+      "falsos_negativos": 10,
+      "nao_verificaveis": 144,
+      "precisao": 0.9167,
+      "revocacao": 0.5238
+    },
+    {
+      "codigo": "PAG-05",
+      "criterio": "Valor pago igual ao valor das notas fiscais",
+      "semantico": false,
+      "casos_semeados": 17,
+      "verdadeiros_positivos": 17,
+      "falsos_positivos": 7,
+      "falsos_negativos": 0,
+      "nao_verificaveis": 29,
+      "precisao": 0.7083,
+      "revocacao": 1.0
+    },
+    {
+      "codigo": "PAG-06",
+      "criterio": "Valor pago coberto pelo empenho",
+      "semantico": false,
+      "casos_semeados": 22,
+      "verdadeiros_positivos": 19,
+      "falsos_positivos": 6,
+      "falsos_negativos": 3,
+      "nao_verificaveis": 53,
+      "precisao": 0.76,
+      "revocacao": 0.8636
+    },
+    {
+      "codigo": "PAG-07",
+      "criterio": "CNPJ da nota fiscal igual ao do contrato",
+      "semantico": false,
+      "casos_semeados": 13,
+      "verdadeiros_positivos": 9,
+      "falsos_positivos": 0,
+      "falsos_negativos": 4,
+      "nao_verificaveis": 73,
+      "precisao": 1.0,
+      "revocacao": 0.6923
+    },
+    {
+      "codigo": "PAG-08",
+      "criterio": "Empenho anterior à despesa",
+      "semantico": false,
+      "casos_semeados": 10,
+      "verdadeiros_positivos": 10,
+      "falsos_positivos": 2,
+      "falsos_negativos": 0,
+      "nao_verificaveis": 35,
+      "precisao": 0.8333,
+      "revocacao": 1.0
+    },
+    {
+      "codigo": "PAG-09",
+      "criterio": "Nota fiscal sem duplicidade em outro processo",
+      "semantico": false,
+      "casos_semeados": 16,
+      "verdadeiros_positivos": 13,
+      "falsos_positivos": 0,
+      "falsos_negativos": 3,
+      "nao_verificaveis": 12,
+      "precisao": 1.0,
+      "revocacao": 0.8125
+    },
+    {
+      "codigo": "PAG-10",
+      "criterio": "Objeto da nota fiscal compatível com o contrato",
+      "semantico": true,
+      "casos_semeados": 21,
+      "verdadeiros_positivos": 13,
+      "falsos_positivos": 21,
+      "falsos_negativos": 8,
+      "nao_verificaveis": 77,
+      "precisao": 0.3824,
+      "revocacao": 0.619
+    },
+    {
+      "codigo": "PAG-11",
+      "criterio": "Atesto sem ressalva sobre a execução",
+      "semantico": true,
+      "casos_semeados": 28,
+      "verdadeiros_positivos": 25,
+      "falsos_positivos": 14,
+      "falsos_negativos": 3,
+      "nao_verificaveis": 0,
+      "precisao": 0.641,
+      "revocacao": 0.8929
+    },
+    {
+      "codigo": "CON-01",
+      "criterio": "Estudo técnico preliminar anexado",
+      "semantico": false,
+      "casos_semeados": 9,
+      "verdadeiros_positivos": 9,
+      "falsos_positivos": 15,
+      "falsos_negativos": 0,
+      "nao_verificaveis": 0,
+      "precisao": 0.375,
+      "revocacao": 1.0
+    },
+    {
+      "codigo": "CON-02",
+      "criterio": "Termo de referência anexado",
+      "semantico": false,
+      "casos_semeados": 12,
+      "verdadeiros_positivos": 12,
+      "falsos_positivos": 5,
+      "falsos_negativos": 0,
+      "nao_verificaveis": 0,
+      "precisao": 0.7059,
+      "revocacao": 1.0
+    },
+    {
+      "codigo": "CON-03",
+      "criterio": "Parecer jurídico anexado",
+      "semantico": false,
+      "casos_semeados": 6,
+      "verdadeiros_positivos": 6,
+      "falsos_positivos": 3,
+      "falsos_negativos": 0,
+      "nao_verificaveis": 0,
+      "precisao": 0.6667,
+      "revocacao": 1.0
+    },
+    {
+      "codigo": "CON-04",
+      "criterio": "Pesquisa de preços com ao menos 3 fornecedores",
+      "semantico": false,
+      "casos_semeados": 5,
+      "verdadeiros_positivos": 5,
+      "falsos_positivos": 4,
+      "falsos_negativos": 0,
+      "nao_verificaveis": 0,
+      "precisao": 0.5556,
+      "revocacao": 1.0
+    },
+    {
+      "codigo": "CON-05",
+      "criterio": "Valor contratado dentro do valor estimado",
+      "semantico": false,
+      "casos_semeados": 8,
+      "verdadeiros_positivos": 8,
+      "falsos_positivos": 0,
+      "falsos_negativos": 0,
+      "nao_verificaveis": 0,
+      "precisao": 1.0,
+      "revocacao": 1.0
+    },
+    {
+      "codigo": "CON-06",
+      "criterio": "Fiscal do contrato designado",
+      "semantico": false,
+      "casos_semeados": 6,
+      "verdadeiros_positivos": 6,
+      "falsos_positivos": 0,
+      "falsos_negativos": 0,
+      "nao_verificaveis": 0,
+      "precisao": 1.0,
+      "revocacao": 1.0
+    },
+    {
+      "codigo": "CON-07",
+      "criterio": "CNPJ da proposta igual ao do contrato",
+      "semantico": false,
+      "casos_semeados": 7,
+      "verdadeiros_positivos": 5,
+      "falsos_positivos": 0,
+      "falsos_negativos": 2,
+      "nao_verificaveis": 31,
+      "precisao": 1.0,
+      "revocacao": 0.7143
+    },
+    {
+      "codigo": "CON-08",
+      "criterio": "Parecer jurídico favorável, sem ressalva pendente",
+      "semantico": true,
+      "casos_semeados": 12,
+      "verdadeiros_positivos": 9,
+      "falsos_positivos": 0,
+      "falsos_negativos": 3,
+      "nao_verificaveis": 0,
+      "precisao": 1.0,
+      "revocacao": 0.75
+    },
+    {
+      "codigo": "CON-09",
+      "criterio": "Objeto do contrato aderente ao termo de referência",
+      "semantico": true,
+      "casos_semeados": 6,
+      "verdadeiros_positivos": 4,
+      "falsos_positivos": 10,
+      "falsos_negativos": 2,
+      "nao_verificaveis": 9,
+      "precisao": 0.2857,
+      "revocacao": 0.6667
+    },
+    {
+      "codigo": "PRE-01",
+      "criterio": "Relatório de execução anexado",
+      "semantico": false,
+      "casos_semeados": 10,
+      "verdadeiros_positivos": 10,
+      "falsos_positivos": 38,
+      "falsos_negativos": 0,
+      "nao_verificaveis": 0,
+      "precisao": 0.2083,
+      "revocacao": 1.0
+    },
+    {
+      "codigo": "PRE-02",
+      "criterio": "Extrato bancário anexado",
+      "semantico": false,
+      "casos_semeados": 5,
+      "verdadeiros_positivos": 5,
+      "falsos_positivos": 28,
+      "falsos_negativos": 0,
+      "nao_verificaveis": 0,
+      "precisao": 0.1515,
+      "revocacao": 1.0
+    },
+    {
+      "codigo": "PRE-03",
+      "criterio": "Saldo remanescente devolvido",
+      "semantico": false,
+      "casos_semeados": 10,
+      "verdadeiros_positivos": 7,
+      "falsos_positivos": 0,
+      "falsos_negativos": 3,
+      "nao_verificaveis": 12,
+      "precisao": 1.0,
+      "revocacao": 0.7
+    },
+    {
+      "codigo": "PRE-04",
+      "criterio": "Soma das despesas igual ao total declarado",
+      "semantico": false,
+      "casos_semeados": 11,
+      "verdadeiros_positivos": 10,
+      "falsos_positivos": 16,
+      "falsos_negativos": 1,
+      "nao_verificaveis": 18,
+      "precisao": 0.3846,
+      "revocacao": 0.9091
+    },
+    {
+      "codigo": "PRE-05",
+      "criterio": "Despesas dentro da vigência do convênio",
+      "semantico": false,
+      "casos_semeados": 7,
+      "verdadeiros_positivos": 4,
+      "falsos_positivos": 0,
+      "falsos_negativos": 3,
+      "nao_verificaveis": 18,
+      "precisao": 1.0,
+      "revocacao": 0.5714
+    },
+    {
+      "codigo": "PRE-06",
+      "criterio": "Prestação de contas entregue no prazo",
+      "semantico": false,
+      "casos_semeados": 9,
+      "verdadeiros_positivos": 3,
+      "falsos_positivos": 0,
+      "falsos_negativos": 6,
+      "nao_verificaveis": 1,
+      "precisao": 1.0,
+      "revocacao": 0.3333
+    },
+    {
+      "codigo": "PRE-07",
+      "criterio": "Despesas compatíveis com o plano de trabalho",
+      "semantico": true,
+      "casos_semeados": 11,
+      "verdadeiros_positivos": 7,
+      "falsos_positivos": 0,
+      "falsos_negativos": 4,
+      "nao_verificaveis": 29,
+      "precisao": 1.0,
+      "revocacao": 0.6364
+    }
+  ],
+  "documentos": {
+    "classificacao_global": 0.9372,
+    "classificacao_por_tipo": {
+      "art": 0.9444,
+      "atesto": 0.9429,
+      "certidao_federal": 0.7384,
+      "certidao_fgts": 0.9561,
+      "certidao_trabalhista": 0.9715,
+      "comprovante_devolucao": 0.7761,
+      "contrato": 1.0,
+      "despacho": 0.9272,
+      "estudo_tecnico_preliminar": 0.8352,
+      "extrato_bancario": 0.7053,
+      "liquidacao": 0.9433,
+      "nota_empenho": 0.8509,
+      "nota_fiscal": 0.9335,
+      "oficio": 1.0,
+      "ordem_pagamento": 0.9267,
+      "parecer_juridico": 0.9681,
+      "pesquisa_precos": 0.96,
+      "plano_trabalho": 0.84,
+      "portaria_fiscal": 1.0,
+      "proposta": 0.91,
+      "relacao_pagamentos": 0.82,
+      "relatorio_execucao": 0.5778,
+      "termo_convenio": 1.0,
+      "termo_referencia": 0.9432
+    },
+    "documentos_por_tipo": {
+      "art": 18,
+      "atesto": 280,
+      "certidao_federal": 302,
+      "certidao_fgts": 319,
+      "certidao_trabalhista": 316,
+      "comprovante_devolucao": 67,
+      "contrato": 400,
+      "despacho": 2350,
+      "estudo_tecnico_preliminar": 91,
+      "extrato_bancario": 95,
+      "liquidacao": 300,
+      "nota_empenho": 342,
+      "nota_fiscal": 361,
+      "oficio": 2437,
+      "ordem_pagamento": 300,
+      "parecer_juridico": 94,
+      "pesquisa_precos": 100,
+      "plano_trabalho": 100,
+      "portaria_fiscal": 94,
+      "proposta": 100,
+      "relacao_pagamentos": 100,
+      "relatorio_execucao": 90,
+      "termo_convenio": 100,
+      "termo_referencia": 88
+    },
+    "classificacao_por_origem": {
+      "digitalizado": 0.965,
+      "texto_nativo": 0.9337
+    },
+    "documentos_por_origem": {
+      "digitalizado": 999,
+      "texto_nativo": 7845
+    },
+    "extracao_por_campo": {
+      "amount": 0.933,
+      "cnpj": 0.9518,
+      "process_number": 0.9983
+    },
+    "campos_avaliados": {
+      "amount": 2449,
+      "cnpj": 3030,
+      "process_number": 8355
+    },
+    "confusoes_mais_frequentes": [
+      {
+        "esperado": "despacho",
+        "obtido": "oficio",
+        "casos": 171
+      },
+      {
+        "esperado": "certidao_federal",
+        "obtido": "oficio",
+        "casos": 79
+      },
+      {
+        "esperado": "nota_empenho",
+        "obtido": "oficio",
+        "casos": 51
+      },
+      {
+        "esperado": "relatorio_execucao",
+        "obtido": "termo_convenio",
+        "casos": 35
+      },
+      {
+        "esperado": "nota_fiscal",
+        "obtido": "oficio",
+        "casos": 24
+      },
+      {
+        "esperado": "ordem_pagamento",
+        "obtido": "oficio",
+        "casos": 22
+      },
+      {
+        "esperado": "extrato_bancario",
+        "obtido": "termo_convenio",
+        "casos": 21
+      },
+      {
+        "esperado": "plano_trabalho",
+        "obtido": "termo_convenio",
+        "casos": 16
+      }
+    ]
+  },
+  "tempo": {
+    "parede_do_ciclo_segundos": 172.1,
+    "parede_por_processo_segundos": 0.344,
+    "mediana_por_processo_segundos": 1.746,
+    "p95_por_processo_segundos": 4.403,
+    "linha_de_base_manual_minutos": 163.5
+  },
+  "registro_auditavel": {
+    "analises": 500,
+    "com_documentos_criterios_resultado_modelo": 500,
+    "cadeia_integra": true,
+    "entradas_na_cadeia": 500
+  },
+  "citacoes_rejeitadas_pela_verificacao": 0,
+  "modelo": [
+    "regras-sem-modelo (deterministico)"
+  ],
+  "busca": {
+    "consultas": 80,
+    "mediana_ms": 0.25,
+    "maximo_ms": 1.59
+  }
+}
