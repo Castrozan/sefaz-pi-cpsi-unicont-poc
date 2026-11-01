@@ -8,7 +8,7 @@ import {
   REVIEW_LABELS,
 } from "./decisoes-locais.js";
 
-const QUEUE_FILTERS = { nucleo: "nucleo", risco: "risco", situacao: "situacao" };
+const QUEUE_FILTERS = ["nucleo", "risco", "situacao"];
 
 function showClearButton() {
   const button = document.getElementById("limpar-decisoes");
@@ -37,9 +37,11 @@ function filterQueue() {
   const parameters = new URLSearchParams(location.search);
   const form = document.querySelector("form.filtros");
   const rows = [...document.querySelectorAll("tr[data-processo]")];
-  for (const name of Object.keys(QUEUE_FILTERS)) form.elements[name].value = parameters.get(name) ?? "";
+  for (const name of QUEUE_FILTERS) {
+    if (parameters.has(name)) form.elements[name].value = parameters.get(name);
+  }
   for (const row of rows) {
-    row.hidden = Object.keys(QUEUE_FILTERS).some((name) => {
+    row.hidden = QUEUE_FILTERS.some((name) => {
       const expected = parameters.get(name);
       return expected && row.dataset[name] !== expected;
     });

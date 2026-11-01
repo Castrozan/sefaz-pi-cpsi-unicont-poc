@@ -131,6 +131,18 @@ def test_browser_search_matches_the_server_search(page, site_url, source_store, 
         assert cells.nth(5).text_content() == visible_snippet
 
 
+def test_text_typed_before_the_scripts_finish_loading_is_kept(page, site_url):
+    held_routes = []
+    page.route("**/estatico/site/busca.js", lambda route: held_routes.append(route))
+    page.goto(site_url + "/busca/")
+    page.fill("input[name=texto]", "ressalva")
+    while not held_routes:
+        page.wait_for_timeout(50)
+    held_routes[0].continue_()
+    page.wait_for_load_state("networkidle")
+    expect(page.locator("input[name=texto]")).to_have_value("ressalva")
+
+
 def test_search_with_only_punctuation_reports_instead_of_breaking(browser, site_url):
     context = browser.new_context()
     page = context.new_page()

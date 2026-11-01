@@ -1,5 +1,3 @@
-import sqlite3InitModule from "./vendor/sqlite-wasm-3.54.1/index.mjs";
-
 const RESULT_LIMIT = 50;
 const SEARCH_DATABASE = "busca.sqlite.gz";
 const FIELD_NAMES = ["texto", "tipo", "cnpj", "processo", "minimo", "maximo"];
@@ -59,6 +57,7 @@ async function downloadDatabase(assetDirectory) {
 }
 
 async function openDatabase(bytes) {
+  const { default: sqlite3InitModule } = await import("./vendor/sqlite-wasm-3.54.1/index.mjs");
   const sqlite3 = await sqlite3InitModule();
   const database = new sqlite3.oo1.DB();
   const pointer = sqlite3.wasm.allocFromTypedArray(bytes);
@@ -147,8 +146,8 @@ export async function runSearchScreen() {
   const output = document.getElementById("resultados-da-busca");
   const base = document.body.dataset.base;
   const fields = readFields();
-  fillForm(form, fields);
   if (!Object.values(fields).some(Boolean)) return;
+  fillForm(form, fields);
   status.textContent = "Carregando o índice neste navegador…";
   try {
     const database = await openDatabase(await downloadDatabase(`${base}/estatico/site`));
